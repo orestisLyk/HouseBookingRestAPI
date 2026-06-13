@@ -1,0 +1,49 @@
+
+services:
+  # SQL Server Database
+  sqlserver:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    container_name: housebooking-sqlserver
+    environment:
+      - ACCEPT_EULA=Y
+      - MSSQL_SA_PASSWORD=${SA_PASSWORD}
+      - MSSQL_PID=Developer
+    ports:
+      - "${DB_PORT:-1437}:1433"
+    volumes:
+      - sqlserver_data:/var/opt/mssql
+    networks:
+      - housebooking-network
+    healthcheck:
+      test: /opt/mssql-tools18/bin/sqlcmd -S localhost -U sa -P "${SA_PASSWORD}" -C -Q "SELECT 1" || exit 1
+      interval: 10s
+      timeout: 3s
+      retries: 10
+      start_period: 10s
+
+  # House Booking REST API
+#   api:
+#     build:
+#       context: .
+#       dockerfile: HouseBookingRestApi/Dockerfile
+#     container_name: housebooking-api
+#     environment:
+#       - ASPNETCORE_ENVIRONMENT=Development
+#       - ASPNETCORE_URLS=http://+:8080
+#       - ConnectionStrings__DefaultConnection=Server=sqlserver;Database=HouseBookingDb;User Id=sa;Password=YourStrong@Password123;TrustServerCertificate=True;
+#     ports:
+#       - "5000:8080"
+#     depends_on:
+#       sqlserver:
+#         condition: service_healthy
+#     networks:
+#       - housebooking-network
+#     restart: unless-stopped
+
+volumes:
+  sqlserver_data:
+    driver: local
+
+networks:
+  housebooking-network:
+    driver: bridge
