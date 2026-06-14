@@ -108,7 +108,7 @@ namespace HouseBookingRestApi.Data
                     .HasConstraintName("FK_Bookings_Houses");
                 entity.HasOne(d => d.Renter).WithMany(p => p.Bookings)
                     .HasForeignKey(d => d.RenterId)
-                    .OnDelete(DeleteBehavior.Cascade)
+                    .OnDelete(DeleteBehavior.NoAction)
                     .HasConstraintName("FK_Bookings_Renters");
                 entity.HasIndex(e => e.HouseId, "IX_Bookings_HouseId");
                 entity.HasIndex(e => e.RenterId, "IX_Bookings_RenterId");

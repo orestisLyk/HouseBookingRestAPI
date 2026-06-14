@@ -1,4 +1,8 @@
 
+using HouseBookingRestApi.Data;
+using Microsoft.EntityFrameworkCore;
+using Serilog;
+
 namespace HouseBookingRestApi
 {
     public class Program
@@ -7,7 +11,16 @@ namespace HouseBookingRestApi
         {
             var builder = WebApplication.CreateBuilder(args);
 
+            var connString = builder.Configuration.GetConnectionString("DefaultConnection");
+
             // Add services to the container.
+            builder.Services.AddDbContext<HouseBookingRestApiContext>(options =>
+                options.UseSqlServer(connString));
+
+            builder.Host.UseSerilog((context, configuration) =>
+            {
+                configuration.ReadFrom.Configuration(context.Configuration);
+            });
 
             builder.Services.AddControllers();
             // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
