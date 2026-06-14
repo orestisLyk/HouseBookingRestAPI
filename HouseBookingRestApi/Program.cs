@@ -1,5 +1,6 @@
 
 using HouseBookingRestApi.Data;
+using HouseBookingRestApi.Security;
 using Microsoft.EntityFrameworkCore;
 using Serilog;
 
@@ -16,6 +17,8 @@ namespace HouseBookingRestApi
             // Add services to the container.
             builder.Services.AddDbContext<HouseBookingRestApiContext>(options =>
                 options.UseSqlServer(connString));
+
+            builder.Services.AddSingleton<IEncryptionUtil, EncryptionUtil>();
 
             builder.Host.UseSerilog((context, configuration) =>
             {
