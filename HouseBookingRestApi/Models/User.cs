@@ -19,5 +19,7 @@
         public Role Role { get; set; } = null!;
 
         public Renter? Renter { get; set; }
+
+        public Owner? Owner { get; set; }
     }
 }

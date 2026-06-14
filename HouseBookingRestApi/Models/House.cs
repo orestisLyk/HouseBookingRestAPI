@@ -8,6 +8,8 @@
 
         public string Description { get; set; }
 
+        public int OwnerId { get; set; }
+
         public Owner Owner { get; set; } = null!;
 
         public ICollection<HouseImage> HouseImages { get; set; } = new HashSet<HouseImage>();
