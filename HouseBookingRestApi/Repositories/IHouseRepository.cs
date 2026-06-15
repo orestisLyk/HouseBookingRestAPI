@@ -3,7 +3,7 @@ using HouseBookingRestApi.Models;
 
 namespace HouseBookingRestApi.Repositories
 {
-    public interface IHousesRepository
+    public interface IHouseRepository
     {
         Task<House?> GetHouseByIdAsync(int houseId);
 

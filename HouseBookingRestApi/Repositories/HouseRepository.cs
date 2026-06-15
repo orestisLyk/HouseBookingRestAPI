@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace HouseBookingRestApi.Repositories
 {
-    public class HouseRepository : BaseRepository<House>, IHousesRepository
+    public class HouseRepository : BaseRepository<House>, IHouseRepository
     {
         public HouseRepository(HouseBookingRestApiContext context) : base(context)
         {

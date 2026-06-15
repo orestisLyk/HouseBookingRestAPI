@@ -8,11 +8,9 @@ namespace HouseBookingRestApi.Repositories
 {
     public class UserRepository : BaseRepository<User>, IUserRepository
     {
-        private readonly EncryptionUtil _encryptionUtil;
 
-        public UserRepository(HouseBookingRestApiContext context, EncryptionUtil encryptionUtil) : base(context)
+        public UserRepository(HouseBookingRestApiContext context) : base(context)
         {
-            _encryptionUtil = encryptionUtil;
         }
 
         public async Task<User?> GetUserAsync(string username, string hashedPassword)
