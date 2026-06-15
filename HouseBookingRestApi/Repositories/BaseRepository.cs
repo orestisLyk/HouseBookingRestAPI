@@ -16,10 +16,10 @@ namespace HouseBookingRestApi.Repositories
 
         public virtual async Task AddAsync(T entity) => await _dbSet.AddAsync(entity);
 
-        public virtual async Task AddRangeAsync(IEnumerable<T> entities)
-        {
+        public virtual async Task AddRangeAsync(IEnumerable<T> entities) =>
+        
             await _dbSet.AddRangeAsync(entities);
-        }
+        
 
         public virtual Task UpdateAsync(T entity)
         {
