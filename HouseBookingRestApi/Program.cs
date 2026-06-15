@@ -1,5 +1,6 @@
 
 using HouseBookingRestApi.Data;
+using HouseBookingRestApi.Repositories;
 using HouseBookingRestApi.Security;
 using Microsoft.EntityFrameworkCore;
 using Serilog;
@@ -19,6 +20,7 @@ namespace HouseBookingRestApi
                 options.UseSqlServer(connString));
 
             builder.Services.AddSingleton<IEncryptionUtil, EncryptionUtil>();
+            builder.Services.AddRepositories();
 
             builder.Host.UseSerilog((context, configuration) =>
             {
