@@ -28,6 +28,5 @@ namespace HouseBookingRestApi.Repositories
                 .ToListAsync();
             return new PaginatedResult<Renter>(renters, totalRenters, pageNumber, pageSize);
         }
-    {
     }
 }

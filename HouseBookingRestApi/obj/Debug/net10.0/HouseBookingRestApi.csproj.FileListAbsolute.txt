@@ -172,3 +172,5 @@ C:\Users\Mindsalad\source\repos\HouseBookingRestApi\HouseBookingRestApi\obj\Debu
 C:\Users\Mindsalad\source\repos\HouseBookingRestApi\HouseBookingRestApi\obj\Debug\net10.0\HouseBookingRestApi.pdb
 C:\Users\Mindsalad\source\repos\HouseBookingRestApi\HouseBookingRestApi\obj\Debug\net10.0\HouseBookingRestApi.genruntimeconfig.cache
 C:\Users\Mindsalad\source\repos\HouseBookingRestApi\HouseBookingRestApi\obj\Debug\net10.0\ref\HouseBookingRestApi.dll
+C:\Users\Mindsalad\source\repos\HouseBookingRestApi\HouseBookingRestApi\bin\Debug\net10.0\appsettings.Production.json
+C:\Users\Mindsalad\source\repos\HouseBookingRestApi\HouseBookingRestApi\bin\Debug\net10.0\appsettings.Staging.json

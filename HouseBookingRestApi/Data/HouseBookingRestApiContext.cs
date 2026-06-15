@@ -93,6 +93,9 @@ namespace HouseBookingRestApi.Data
             {
                 entity.Property(e => e.Name).HasMaxLength(100);
                 entity.Property(e => e.Description).HasMaxLength(500);
+                entity.Property(e => e.Address).HasMaxLength(200);
+                entity.Property(e => e.Region).HasMaxLength(100);
+                entity.Property(e => e.PricePerNight).HasColumnType("decimal(18,2)");
                 entity.HasOne(d => d.Owner).WithMany(p => p.Houses)
                     .HasForeignKey(d => d.OwnerId)
                     .OnDelete(DeleteBehavior.Cascade)

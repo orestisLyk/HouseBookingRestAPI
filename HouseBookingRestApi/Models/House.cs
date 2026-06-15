@@ -8,6 +8,12 @@
 
         public string Description { get; set; }
 
+        public string Address { get; set; }
+
+        public string Region { get; set; }
+
+        public float PricePerNight { get; set; }
+
         public int OwnerId { get; set; }
 
         public Owner Owner { get; set; } = null!;
