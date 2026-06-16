@@ -5,7 +5,8 @@
         DateTime StartDate,
         DateTime EndDate,
         int HouseId,
-        int RenterId
+        int RenterId,
+        string HouseName  
         )
     {
     }

@@ -9,6 +9,7 @@ namespace HouseBookingRestApi.DTO
         string Address,
         string Region,
         decimal PricePerNight,
+        List<string> ImageUrls,
         int OwnerId
         )
     {
