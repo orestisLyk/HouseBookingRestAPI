@@ -1,4 +1,6 @@
-﻿namespace HouseBookingRestApi.DTO
+﻿using HouseBookingRestApi.Models;
+
+namespace HouseBookingRestApi.DTO
 {
     public record HouseReadOnlyDTO(
         int Id,
@@ -7,7 +9,7 @@
         string Address,
         string Region,
         decimal PricePerNight,
-        string OwnerFullName
+        int OwnerId
         )
     {
     }
