@@ -2,7 +2,7 @@
 
 namespace HouseBookingRestApi.Repositories
 {
-    public interface IHouseImageRepository
+    public interface IHouseImageRepository : IBaseRepository<HouseImage>
     {
         Task<HouseImage?> GetHouseImageByIdAsync(int houseImageId);
 

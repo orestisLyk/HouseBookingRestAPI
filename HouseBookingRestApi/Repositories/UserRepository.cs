@@ -43,5 +43,7 @@ namespace HouseBookingRestApi.Repositories
 
             return new PaginatedResult<User>(users, totalUsers, pageNumber, pageSize);
         }
+
+        
     }
 }

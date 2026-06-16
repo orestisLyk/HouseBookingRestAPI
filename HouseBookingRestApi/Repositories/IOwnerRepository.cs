@@ -3,7 +3,7 @@ using HouseBookingRestApi.Models;
 
 namespace HouseBookingRestApi.Repositories
 {
-    public interface IOwnerRepository
+    public interface IOwnerRepository : IBaseRepository<Owner>
     {
         Task<Owner?> GetOwnerByIdAsync(int ownerId);
 

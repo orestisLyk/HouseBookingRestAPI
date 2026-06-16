@@ -2,7 +2,7 @@
 
 namespace HouseBookingRestApi.Repositories
 {
-    public interface IRoleRepository
+    public interface IRoleRepository : IBaseRepository<Role>
     {
         Task<Role?> GetRoleByIdAsync(int roleId);
 
