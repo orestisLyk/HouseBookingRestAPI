@@ -10,6 +10,8 @@
 
         IHouseRepository HouseRepository { get; }
 
+        IBookingRepository BookingRepository { get; }
+
         IHouseImageRepository HouseImageRepository { get; }
 
         IRoleRepository RoleRepository { get; }

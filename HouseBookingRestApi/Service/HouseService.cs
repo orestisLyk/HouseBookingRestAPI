@@ -11,9 +11,15 @@ namespace HouseBookingRestApi.Service
     public class HouseService : IHouseService
     {
         private readonly IUnitOfWork unitOfWork;
-        private readonly ILogger<UserService> logger;
-        private readonly IEncryptionUtil encryptionUtil;
+        private readonly ILogger<HouseService> logger;
         private IMapper mapper;
+
+        public HouseService(IUnitOfWork unitOfWork, ILogger<HouseService> logger, IMapper mapper)
+        {
+            this.unitOfWork = unitOfWork;
+            this.logger = logger;
+            this.mapper = mapper;
+        }
         public async Task<HouseReadOnlyDTO> CreateHouseAsync(HouseRegisterDTO dto)
         { 
             House house = mapper.Map<House>(dto);

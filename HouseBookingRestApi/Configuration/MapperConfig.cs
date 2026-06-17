@@ -29,6 +29,8 @@ namespace HouseBookingRestApi.Configuration
 
             CreateMap<BookingRegisterDTO, Booking>();
 
+            CreateMap<Role, RoleReadOnlyDTO>();
+
             
 
 

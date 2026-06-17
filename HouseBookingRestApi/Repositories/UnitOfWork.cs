@@ -16,6 +16,8 @@ namespace HouseBookingRestApi.Repositories
 
         public IHouseRepository HouseRepository { get; }
 
+        public IBookingRepository BookingRepository { get; }
+
         public IHouseImageRepository HouseImageRepository { get; }
 
         public UnitOfWork(HouseBookingRestApiContext context)
