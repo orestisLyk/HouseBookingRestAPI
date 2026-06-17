@@ -5,12 +5,21 @@ using HouseBookingRestApi.Security;
 using Microsoft.EntityFrameworkCore;
 using Serilog;
 
+using CloudinaryDotNet;
+using CloudinaryDotNet.Actions;
+using dotenv.net;
+
 namespace HouseBookingRestApi
 {
     public class Program
     {
         public static void Main(string[] args)
         {
+            // Setup for Cloudinary
+            DotEnv.Load(options: new DotEnvOptions(probeForEnv: true));
+            Cloudinary cloudinary = new Cloudinary(Environment.GetEnvironmentVariable("CLOUDINARY_URL"));
+            cloudinary.Api.Secure = true;
+
             var builder = WebApplication.CreateBuilder(args);
 
             var connString = builder.Configuration.GetConnectionString("DefaultConnection");

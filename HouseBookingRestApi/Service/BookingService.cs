@@ -48,10 +48,57 @@ namespace HouseBookingRestApi.Service
 
         public async Task RegisterBookingAsync(BookingRegisterDTO dto)
         {
-            var booking = mapper.Map<Booking>(dto);
-            await unitOfWork.BookingRepository.AddAsync(booking);
-            await unitOfWork.SaveAsync();
-            logger.LogInformation($"Registered booking for house ID {booking.HouseId} by renter ID {booking.RenterId}.");
+            try
+            {
+                if (dto.StartDate <= DateTime.Now)
+                {
+                    throw new InvalidBookingDatesException("Start date must be in the future.");
+                }
+
+                if (dto.EndDate <= dto.StartDate)
+                {
+                    throw new InvalidBookingDatesException("End date must be after start date.");
+                }
+
+                 House? house = await unitOfWork.HouseRepository.GetHouseByIdAsync(dto.HouseId);
+
+                if(house == null)
+                {
+                    throw new EntityNotFoundException($"House with ID {dto.HouseId} not found.");
+                }
+
+                Renter? renter = await unitOfWork.RenterRepository.GetRenterByIdAsync(dto.RenterId);
+
+                if (renter == null)
+                {
+                    throw new EntityNotFoundException($"Renter with ID {dto.RenterId} not found.");
+                }
+
+                var existingBookings = await unitOfWork.BookingRepository.GetBookingsByHouseIdAsync(dto.HouseId);
+
+                bool hasOverlap = existingBookings.Any(b => (dto.StartDate < b.EndDate && dto.EndDate > b.StartDate));
+
+                if (hasOverlap)
+                {
+                    throw new BookingsOverlapException("The requested booking dates overlap with an existing booking.");
+                }
+
+                var booking = mapper.Map<Booking>(dto);
+                await unitOfWork.BookingRepository.AddAsync(booking);
+                await unitOfWork.SaveAsync();
+                logger.LogInformation($"Registered booking for house ID {booking.HouseId} by renter ID {booking.RenterId}.");
+            }
+            catch (InvalidBookingDatesException ex)
+            {
+                logger.LogError(ex, "Invalid booking dates.");
+                throw;
+            }
+            catch (BookingsOverlapException ex)
+            {
+                logger.LogError(ex, "The requested booking overlaps with a preexisting booking on this house");
+                throw;
+            }
         }
+
     }
 }
