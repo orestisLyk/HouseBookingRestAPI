@@ -26,6 +26,6 @@ namespace HouseBookingRestApi.Repositories
                 .ToListAsync();
         }
     }
-    {
-    }
+    
+    
 }

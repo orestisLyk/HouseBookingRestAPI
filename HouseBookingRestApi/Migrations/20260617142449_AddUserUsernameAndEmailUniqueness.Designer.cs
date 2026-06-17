@@ -4,6 +4,7 @@ using HouseBookingRestApi.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace HouseBookingRestApi.Migrations
 {
     [DbContext(typeof(HouseBookingRestApiContext))]
-    partial class HouseBookingRestApiContextModelSnapshot : ModelSnapshot
+    [Migration("20260617142449_AddUserUsernameAndEmailUniqueness")]
+    partial class AddUserUsernameAndEmailUniqueness
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

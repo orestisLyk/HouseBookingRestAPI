@@ -5,7 +5,7 @@ using HouseBookingRestApi.Repositories;
 
 namespace HouseBookingRestApi.Service
 {
-    public interface IUserService : IBaseRepository<User>
+    public interface IUserService
     {
         Task<User?> VerifyAndGetUserAsync(UserLoginDTO dto);
 

@@ -65,9 +65,11 @@ namespace HouseBookingRestApi.Data
                     .OnDelete(DeleteBehavior.Restrict)
                     .HasConstraintName("FK_Users_Roles");
 
-                entity.HasIndex(e => e.Email, "IX_Users_Email").IsUnique();
+                entity.HasIndex(e => e.Email, "IX_Users_Email");
                 entity.HasIndex(e => e.RoleId, "IX_Users_RoleId");
                 entity.HasIndex(e => e.Username, "IX_Users_Username");
+                entity.HasIndex(e => e.Email, "UQ_Users_Email").IsUnique();
+                entity.HasIndex(e => e.Username, "UQ_Users_Username").IsUnique();
             });
 
             modelBuilder.Entity<Owner>(entity =>
