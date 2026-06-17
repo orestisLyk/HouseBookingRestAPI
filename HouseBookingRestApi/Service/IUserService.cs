@@ -11,7 +11,7 @@ namespace HouseBookingRestApi.Service
 
         Task<UserReadOnlyDTO?> GetUserByUsernameAsync(string username);
 
-        Task<bool> RegisterUserAsync(UserRegisterDTO dto);
+        Task RegisterUserAsync(UserRegisterDTO dto);
 
         Task<PaginatedResult<UserReadOnlyDTO>> GetPaginatedUsersAsync(int pageNumber, int pageSize);
     }

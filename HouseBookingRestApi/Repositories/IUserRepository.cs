@@ -3,7 +3,7 @@ using HouseBookingRestApi.Models;
 
 namespace HouseBookingRestApi.Repositories
 {
-    public interface IUserRepository
+    public interface IUserRepository : IBaseRepository<User>
     {
         Task<User?> GetUserAsync(string username, string hashedPassword);
 
