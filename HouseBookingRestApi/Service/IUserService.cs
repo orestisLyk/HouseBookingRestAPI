@@ -7,12 +7,14 @@ namespace HouseBookingRestApi.Service
 {
     public interface IUserService
     {
-        Task<User?> VerifyAndGetUserAsync(UserLoginDTO dto);
+        Task<UserReadOnlyDTO> VerifyAndGetUserAsync(UserLoginDTO dto);
 
         Task<UserReadOnlyDTO?> GetUserByUsernameAsync(string username);
 
         Task RegisterUserAsync(UserRegisterDTO dto);
 
         Task<PaginatedResult<UserReadOnlyDTO>> GetPaginatedUsersAsync(int pageNumber, int pageSize);
+
+        Task<JwtTokenDTO> Login(UserLoginDTO dto);
     }
 }

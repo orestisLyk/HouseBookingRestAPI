@@ -29,7 +29,7 @@ namespace HouseBookingRestApi.Service
             this.configuration = configuration;
         }
 
-        public async Task<User?> VerifyAndGetUserAsync(UserLoginDTO dto)
+        public async Task<UserReadOnlyDTO> VerifyAndGetUserAsync(UserLoginDTO dto)
         {
             var user = await unitOfWork.UserRepository.GetUserByUsernameAsync(dto.Username);
 
@@ -47,7 +47,7 @@ namespace HouseBookingRestApi.Service
                 throw new InvalidCredentialsException("Password is invalid");
             }
 
-            return user;
+            return mapper.Map<UserReadOnlyDTO>(user);
         }
 
         public async Task<PaginatedResult<UserReadOnlyDTO>> GetPaginatedUsersAsync(int pageNumber, int pageSize)
@@ -101,6 +101,7 @@ namespace HouseBookingRestApi.Service
             switch (role.Name)
             {
                 case "Admin":
+                    throw new EntityForbiddenException("Admin creation is forbidden through the normal sign up process.");
                     break;
 
                 case "Owner":
@@ -126,6 +127,25 @@ namespace HouseBookingRestApi.Service
             await unitOfWork.SaveAsync();
             logger.LogInformation($"Registered user: {user.Username}");
             
+        }
+
+        public async Task<JwtTokenDTO> Login(UserLoginDTO dto)
+        {
+            User? user = await unitOfWork.UserRepository.GetUserByUsernameAsync(dto.Username);
+
+            if (user == null)
+            {
+                throw new InvalidCredentialsException("Invalid username or password.");
+            }
+
+            bool isPasswordValid = encryptionUtil.Verify(dto.Password, user.Password);
+            if (!isPasswordValid)
+            {
+                throw new InvalidCredentialsException("Invalid username or password.");
+            }
+
+            string token = CreateUserToken(user.Id, user.Username, user.Email, user.Role);
+            return new JwtTokenDTO(token);
         }
 
         public string CreateUserToken(int userId, string username, string email, Role userRole)
@@ -158,5 +178,7 @@ namespace HouseBookingRestApi.Service
             var userToken = new JwtSecurityTokenHandler().WriteToken(jwtSecurityToken);
             return userToken;
         }
+
+
     }
 }
