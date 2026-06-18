@@ -31,37 +31,23 @@ namespace HouseBookingRestApi.Service
 
         public async Task<User?> VerifyAndGetUserAsync(UserLoginDTO dto)
         {
-            try
+            var user = await unitOfWork.UserRepository.GetUserByUsernameAsync(dto.Username);
+
+            if (user == null)
             {
-                var user = await unitOfWork.UserRepository.GetUserByUsernameAsync(dto.Username);
 
-                if (user == null)
-                {
-
-                    throw new EntityNotFoundException("No User with username " + dto.Username + " found");
-                }
-
-                bool isPasswordValid = encryptionUtil.Verify(dto.Password, user.Password);
-
-                if (!isPasswordValid)
-                {
-
-                    throw new InvalidCredentialsException("Password is invalid");
-                }
-
-                return user;
+                throw new EntityNotFoundException("No User with username " + dto.Username + " found");
             }
-            catch (EntityNotFoundException ex)
+
+            bool isPasswordValid = encryptionUtil.Verify(dto.Password, user.Password);
+
+            if (!isPasswordValid)
             {
-                logger.LogError(ex, "Failed to load User with the given username");
-                throw;
 
+                throw new InvalidCredentialsException("Password is invalid");
             }
-            catch (InvalidCredentialsException ex)
-            {
-                logger.LogError("Invalid password");
-                throw;
-            }
+
+            return user;
         }
 
         public async Task<PaginatedResult<UserReadOnlyDTO>> GetPaginatedUsersAsync(int pageNumber, int pageSize)
