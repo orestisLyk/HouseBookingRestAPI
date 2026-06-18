@@ -22,23 +22,28 @@ services:
       start_period: 10s
 
   # House Booking REST API
-#   api:
-#     build:
-#       context: .
-#       dockerfile: HouseBookingRestApi/Dockerfile
-#     container_name: housebooking-api
-#     environment:
-#       - ASPNETCORE_ENVIRONMENT=Development
-#       - ASPNETCORE_URLS=http://+:8080
-#       - ConnectionStrings__DefaultConnection=Server=sqlserver;Database=HouseBookingDb;User Id=sa;Password=YourStrong@Password123;TrustServerCertificate=True;
-#     ports:
-#       - "5000:8080"
-#     depends_on:
-#       sqlserver:
-#         condition: service_healthy
-#     networks:
-#       - housebooking-network
-#     restart: unless-stopped
+  api:
+    build:
+      context: .
+      dockerfile: HouseBookingRestApi/Dockerfile
+    container_name: housebooking-api
+    environment:
+      - Jwt__Issuer=${JWT_ISSUER}
+      - Jwt__Audience=${JWT_AUDIENCE}
+      - Jwt__Key=${JWT_SECRET}
+      - Cors__Origin=${CORS_ORIGINS}
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=http://+:8080
+      - CLOUDINARY_URL=${CLOUDINARY_URL}
+      - ConnectionStrings__DefaultConnection=Server=sqlserver;Database=${DB_NAME};User Id=${DB_USER};Password=${DB_USER_PASSWORD};TrustServerCertificate=True;
+    ports:
+      - "5000:8080"
+    depends_on:
+      sqlserver:
+        condition: service_healthy
+    networks:
+      - housebooking-network
+    restart: unless-stopped
 
 volumes:
   sqlserver_data:

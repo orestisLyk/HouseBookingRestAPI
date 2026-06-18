@@ -5,6 +5,10 @@ using HouseBookingRestApi.Models;
 using HouseBookingRestApi.Repositories;
 using HouseBookingRestApi.Security;
 using HouseBookingRestApi.Exceptions;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
+using System.Security.Claims;
+using System.IdentityModel.Tokens.Jwt;
 
 namespace HouseBookingRestApi.Service
 {
@@ -14,13 +18,15 @@ namespace HouseBookingRestApi.Service
         private readonly ILogger<UserService> logger;
         private readonly IEncryptionUtil encryptionUtil;
         private IMapper mapper;
+        private IConfiguration configuration;
 
-        public UserService(IUnitOfWork unitOfWork, ILogger<UserService> logger, IEncryptionUtil encryptionUtil, IMapper mapper)
+        public UserService(IUnitOfWork unitOfWork, ILogger<UserService> logger, IEncryptionUtil encryptionUtil, IMapper mapper, IConfiguration configuration)
         {
             this.unitOfWork = unitOfWork;
             this.logger = logger;
             this.encryptionUtil = encryptionUtil;
             this.mapper = mapper;
+            this.configuration = configuration;
         }
 
         public async Task<User?> VerifyAndGetUserAsync(UserLoginDTO dto)
@@ -91,6 +97,12 @@ namespace HouseBookingRestApi.Service
         {
             try
             {
+                User? existingUser = await unitOfWork.UserRepository.GetUserByUsernameAsync(dto.Username);
+                if(existingUser != null)
+                {
+                    throw new EntityAlreadyExistsException("A User with this username already exists");
+                }
+
                 User user = mapper.Map<User>(dto);
 
                 user.Password = encryptionUtil.Encrypt(dto.Password);
@@ -138,6 +150,49 @@ namespace HouseBookingRestApi.Service
             catch (InvalidOperationException ex)
             {
                 logger.LogError(ex, "Invalid role name: " + ex.Message);
+                throw;
+            }
+            catch (EntityAlreadyExistsException ex)
+            {
+                logger.LogError(ex, "Username already exists");
+            }
+        }
+
+        public string CreateUserToken(int userId, string username, string email, Role userRole)
+        {
+            try
+            {
+                var appSecurityKey = configuration.GetValue<string>("Jwt:Key");
+                if (appSecurityKey == null)
+                {
+                    throw new InvalidOperationException("JWT security key is not configured correctly.");
+                }
+                var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(appSecurityKey));
+                var signingCredentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
+
+                var ClaimsInfo = new List<Claim>
+                {
+                    new Claim(ClaimTypes.NameIdentifier, userId.ToString()),
+                    new Claim(ClaimTypes.Name, username),
+                    new Claim(ClaimTypes.Email, email),
+                    new Claim(ClaimTypes.Role, userRole.Name)
+                };
+
+                var jwtSecurityToken = new JwtSecurityToken(
+                    issuer: configuration["Jwt:Issuer"],
+                    audience: configuration["Jwt:Audience"],
+                    claims: ClaimsInfo,
+                    expires: DateTime.Now.AddHours(12),
+                    signingCredentials: signingCredentials
+                );
+
+                //serialize token
+                var userToken = new JwtSecurityTokenHandler().WriteToken(jwtSecurityToken);
+                return userToken;
+            }
+            catch (InvalidOperationException ex)
+            {
+                logger.LogError(ex, "Failed to create user token.");
                 throw;
             }
         }

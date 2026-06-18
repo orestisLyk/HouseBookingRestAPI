@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("HouseBookingRestApi")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+1c0aea5c951ab9ae76bc7874828448a9d97c519b")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+644b03d0413e6c88b4a5de8e86e163ab55dbcefc")]
 [assembly: System.Reflection.AssemblyProductAttribute("HouseBookingRestApi")]
 [assembly: System.Reflection.AssemblyTitleAttribute("HouseBookingRestApi")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

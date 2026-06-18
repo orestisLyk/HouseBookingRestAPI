@@ -6,8 +6,8 @@ namespace HouseBookingRestApi.Service
     {
         Task<HouseImageReadOnlyDTO> GetImageByIdAsync(int Id);
 
-        Task<List<HouseImageReadOnlyDTO>> GetImagesByHouseId(int houseId);
+        Task<IEnumerable<HouseImageReadOnlyDTO>> GetImagesByHouseIdAsync(int houseId);
 
-        Task CreateImage
+        Task CreateImageAsync(HouseImageCreateDTO dto);
     }
 }
