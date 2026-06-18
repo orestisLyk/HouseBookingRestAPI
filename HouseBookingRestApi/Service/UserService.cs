@@ -95,106 +95,82 @@ namespace HouseBookingRestApi.Service
 
         public async Task RegisterUserAsync(UserRegisterDTO dto)
         {
-            try
+            User? existingUser = await unitOfWork.UserRepository.GetUserByUsernameAsync(dto.Username);
+            if(existingUser != null)
             {
-                User? existingUser = await unitOfWork.UserRepository.GetUserByUsernameAsync(dto.Username);
-                if(existingUser != null)
-                {
-                    throw new EntityAlreadyExistsException("A User with this username already exists");
-                }
-
-                User user = mapper.Map<User>(dto);
-
-                user.Password = encryptionUtil.Encrypt(dto.Password);
-
-                await unitOfWork.UserRepository.AddAsync(user);
-
-                Role? role = await unitOfWork.RoleRepository.GetRoleByIdAsync(dto.RoleId);
-                if (role == null)
-                {
-                    throw new EntityNotFoundException("Role with ID " + dto.RoleId + " not found.");
-                }
-                switch (role.Name)
-                {
-                    case "Admin":
-                        break;
-
-                    case "Owner":
-                        Owner owner = new Owner()
-                        {
-                            User = user
-                        };
-                        await unitOfWork.OwnerRepository.AddAsync(owner);
-                        break;
-
-                    case "Renter":
-                        Renter renter = new Renter()
-                        {
-                            User = user
-                        };
-                        await unitOfWork.RenterRepository.AddAsync(renter);
-                        break;
-
-                    default:
-                        throw new InvalidOperationException("Invalid role name: " + role.Name);
-                }
-
-                await unitOfWork.SaveAsync();
-                logger.LogInformation($"Registered user: {user.Username}");
+                throw new EntityAlreadyExistsException("A User with this username already exists");
             }
-            catch (EntityNotFoundException ex)
+
+            User user = mapper.Map<User>(dto);
+
+            user.Password = encryptionUtil.Encrypt(dto.Password);
+
+            await unitOfWork.UserRepository.AddAsync(user);
+
+            Role? role = await unitOfWork.RoleRepository.GetRoleByIdAsync(dto.RoleId);
+            if (role == null)
             {
-                logger.LogError(ex, "Failed to retrieve role with ID " + dto.RoleId);
-                throw;
+                throw new EntityNotFoundException("Role with ID " + dto.RoleId + " not found.");
             }
-            catch (InvalidOperationException ex)
+            switch (role.Name)
             {
-                logger.LogError(ex, "Invalid role name: " + ex.Message);
-                throw;
+                case "Admin":
+                    break;
+
+                case "Owner":
+                    Owner owner = new Owner()
+                    {
+                        User = user
+                    };
+                    await unitOfWork.OwnerRepository.AddAsync(owner);
+                    break;
+
+                case "Renter":
+                    Renter renter = new Renter()
+                    {
+                        User = user
+                    };
+                    await unitOfWork.RenterRepository.AddAsync(renter);
+                    break;
+
+                default:
+                    throw new InvalidOperationException("Invalid role name: " + role.Name);
             }
-            catch (EntityAlreadyExistsException ex)
-            {
-                logger.LogError(ex, "Username already exists");
-            }
+
+            await unitOfWork.SaveAsync();
+            logger.LogInformation($"Registered user: {user.Username}");
+            
         }
 
         public string CreateUserToken(int userId, string username, string email, Role userRole)
         {
-            try
+            var appSecurityKey = configuration.GetValue<string>("Jwt:Key");
+            if (appSecurityKey == null)
             {
-                var appSecurityKey = configuration.GetValue<string>("Jwt:Key");
-                if (appSecurityKey == null)
-                {
-                    throw new InvalidOperationException("JWT security key is not configured correctly.");
-                }
-                var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(appSecurityKey));
-                var signingCredentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
-
-                var ClaimsInfo = new List<Claim>
-                {
-                    new Claim(ClaimTypes.NameIdentifier, userId.ToString()),
-                    new Claim(ClaimTypes.Name, username),
-                    new Claim(ClaimTypes.Email, email),
-                    new Claim(ClaimTypes.Role, userRole.Name)
-                };
-
-                var jwtSecurityToken = new JwtSecurityToken(
-                    issuer: configuration["Jwt:Issuer"],
-                    audience: configuration["Jwt:Audience"],
-                    claims: ClaimsInfo,
-                    expires: DateTime.Now.AddHours(12),
-                    signingCredentials: signingCredentials
-                );
-
-                //serialize token
-                var userToken = new JwtSecurityTokenHandler().WriteToken(jwtSecurityToken);
-                return userToken;
+                throw new InvalidOperationException("JWT security key is not configured correctly.");
             }
-            catch (InvalidOperationException ex)
+            var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(appSecurityKey));
+            var signingCredentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
+
+            var ClaimsInfo = new List<Claim>
             {
-                logger.LogError(ex, "Failed to create user token.");
-                throw;
-            }
+                new Claim(ClaimTypes.NameIdentifier, userId.ToString()),
+                new Claim(ClaimTypes.Name, username),
+                new Claim(ClaimTypes.Email, email),
+                new Claim(ClaimTypes.Role, userRole.Name)
+            };
+
+            var jwtSecurityToken = new JwtSecurityToken(
+                issuer: configuration["Jwt:Issuer"],
+                audience: configuration["Jwt:Audience"],
+                claims: ClaimsInfo,
+                expires: DateTime.Now.AddHours(12),
+                signingCredentials: signingCredentials
+            );
+
+            //serialize token
+            var userToken = new JwtSecurityTokenHandler().WriteToken(jwtSecurityToken);
+            return userToken;
         }
     }
 }

@@ -30,21 +30,12 @@ namespace HouseBookingRestApi.Service
 
         public async Task<HouseReadOnlyDTO?> GetHouseByIdAsync(int id)
         {
-            try
+            House? house = await unitOfWork.HouseRepository.GetHouseByIdAsync(id);
+            if (house == null)
             {
-                House? house = await unitOfWork.HouseRepository.GetHouseByIdAsync(id);
-                if (house == null)
-                {
-                    throw new EntityNotFoundException($"House with ID {id} not found.");
-                }
-                return mapper.Map<HouseReadOnlyDTO>(house);
-
+                throw new EntityNotFoundException($"House with ID {id} not found.");
             }
-            catch (EntityNotFoundException ex)
-            {
-                logger.LogError(ex, $"House with ID {id} not found.");
-                throw;
-            }
+            return mapper.Map<HouseReadOnlyDTO>(house);
         }
 
         public async Task<List<HouseReadOnlyDTO>> GetHousesByOwnerId(int ownerId)

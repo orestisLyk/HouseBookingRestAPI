@@ -23,29 +23,18 @@ namespace HouseBookingRestApi.Service
 
         public async Task CreateImageAsync(HouseImageCreateDTO dto)
         {
-            try
-            {
-                string url = await imageStorageService.UploadImageAsync(dto.HouseId, dto.File);
+            
+            string url = await imageStorageService.UploadImageAsync(dto.HouseId, dto.File);
 
-                var houseImage = new HouseImage
-                {
-                    HouseId = dto.HouseId,
-                    Url = url
-                };
+            var houseImage = new HouseImage
+            {
+                HouseId = dto.HouseId,
+                Url = url
+            };
 
-                await unitOfWork.HouseImageRepository.AddAsync(houseImage);
-                await unitOfWork.SaveAsync();
-            }
-            catch (ImageUploadException ex)
-            {
-                logger.LogError(ex, "Error uploading image for house ID {HouseId}", dto.HouseId);
-                throw;
-            }
-            catch(ArgumentException ex)
-            {
-                logger.LogError(ex, "Invalid argument provided for house ID {HouseId}", dto.HouseId);
-                throw;
-            }
+            await unitOfWork.HouseImageRepository.AddAsync(houseImage);
+            await unitOfWork.SaveAsync();
+          
 
         }
 
@@ -57,20 +46,14 @@ namespace HouseBookingRestApi.Service
 
         public async Task<HouseImageReadOnlyDTO> GetImageByIdAsync(int Id)
         {
-            try
+           
+            var houseImage = await unitOfWork.HouseImageRepository.GetHouseImageByIdAsync(Id);
+            if (houseImage == null)
             {
-                var houseImage = await unitOfWork.HouseImageRepository.GetHouseImageByIdAsync(Id);
-                if (houseImage == null)
-                {
-                    throw new EntityNotFoundException($"House image with ID {Id} not found.");
-                }
-                return mapper.Map<HouseImageReadOnlyDTO>(houseImage);
+                throw new EntityNotFoundException($"House image with ID {Id} not found.");
             }
-            catch (EntityNotFoundException ex)
-            {
-                logger.LogError(ex, "House image with ID {Id} not found.", Id);
-                throw;
-            }
+            return mapper.Map<HouseImageReadOnlyDTO>(houseImage);
+            
 
         }
     }
