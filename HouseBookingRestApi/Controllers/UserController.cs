@@ -54,9 +54,16 @@ namespace HouseBookingRestApi.Controllers
         [Authorize(Policy = "AdminOnly")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
         public async Task<ActionResult> DeleteUser(int id)
         {
             var dto = new UserDeleteDTO(id);
+            var currentUserRole = User.FindFirst(ClaimTypes.Role)?.Value;
+            if (currentUserRole != "Admin")
+            {
+                throw new EntityForbiddenException("You are not authorized to delete users.");
+            }
+
             await userService.DeleteUserAsync(dto);
             return NoContent();
         }

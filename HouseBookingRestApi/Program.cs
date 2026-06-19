@@ -96,6 +96,19 @@ namespace HouseBookingRestApi
 
             });
 
+            //Add authorization policies
+            builder.Services.AddAuthorization(options =>
+            {
+                options.AddPolicy("OwnerOnly", policy =>
+                    policy.RequireRole("Owner"));
+            });
+
+            builder.Services.AddAuthorization(options =>
+            {
+                options.AddPolicy("AdminOnly", policy =>
+                    policy.RequireRole("Admin"));
+            });
+
             // Add services to the container.
 
             builder.Services.AddDbContext<HouseBookingRestApiContext>(options =>
