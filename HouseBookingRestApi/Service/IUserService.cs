@@ -16,5 +16,7 @@ namespace HouseBookingRestApi.Service
         Task<PaginatedResult<UserReadOnlyDTO>> GetPaginatedUsersAsync(int pageNumber, int pageSize);
 
         Task<JwtTokenDTO> Login(UserLoginDTO dto);
+
+        Task DeleteUserAsync(UserDeleteDTO dto);
     }
 }

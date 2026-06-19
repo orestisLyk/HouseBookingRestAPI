@@ -25,7 +25,7 @@ services:
   api:
     build:
       context: .
-      dockerfile: HouseBookingRestApi/Dockerfile
+      dockerfile: Dockerfile
     container_name: housebooking-api
     environment:
       - Jwt__Issuer=${JWT_ISSUER}

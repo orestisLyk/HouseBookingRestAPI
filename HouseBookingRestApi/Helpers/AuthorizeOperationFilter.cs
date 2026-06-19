@@ -14,10 +14,11 @@ namespace HouseBookingRestApi.Helpers
                 .OfType<Microsoft.AspNetCore.Authorization.AuthorizeAttribute>()
                 .Distinct();
 
-            if(authAttributes.Any())
+            if (authAttributes.Any())
             {
-                operation.Responses.Add("401", new OpenApiResponse { Description = "Unauthorized" });
-                operation.Responses.Add("403", new OpenApiResponse { Description = "Forbidden" });
+                // Use indexer to avoid duplicate key exceptions
+                operation.Responses["401"] = new OpenApiResponse { Description = "Unauthorized" };
+                operation.Responses["403"] = new OpenApiResponse { Description = "Forbidden" };
 
                 // Add security requirements
                 operation.Security = new List<OpenApiSecurityRequirement>();

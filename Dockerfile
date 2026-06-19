@@ -20,4 +20,5 @@ FROM mcr.microsoft.com/dotnet/aspnet:10.0 AS final
 WORKDIR /app
 EXPOSE 8080
 COPY --from=publish /app/publish .
+COPY .env .env
 ENTRYPOINT ["dotnet", "HouseBookingRestApi.dll"]

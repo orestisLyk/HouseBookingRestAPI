@@ -1,4 +1,3 @@
-
 using HouseBookingRestApi.Data;
 using HouseBookingRestApi.Repositories;
 using HouseBookingRestApi.Security;
@@ -13,6 +12,8 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using System.Reflection;
 using Microsoft.OpenApi.Models;
 using HouseBookingRestApi.Helpers;
+using HouseBookingRestApi.Configuration;
+using AutoMapper;
 
 namespace HouseBookingRestApi
 {
@@ -105,6 +106,8 @@ namespace HouseBookingRestApi
 
             builder.Services.AddSingleton(cloudinary);
 
+            builder.Services.AddAutoMapper(cfg => { }, typeof(MapperConfig).Assembly);
+
             builder.Host.UseSerilog((context, configuration) =>
             {
                 configuration.ReadFrom.Configuration(context.Configuration);
@@ -118,10 +121,9 @@ namespace HouseBookingRestApi
 
             builder.Services.AddSingleton(cloudinary);
 
-            builder.Services.AddControllers();
-
             builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
-           
+            builder.Services.AddProblemDetails();
+
 
             var app = builder.Build();
 

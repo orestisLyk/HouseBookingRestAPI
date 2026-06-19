@@ -39,9 +39,16 @@ namespace HouseBookingRestApi.Repositories
                 .OrderBy(u => u.Id)
                 .Skip((pageNumber - 1) * pageSize)
                 .Take(pageSize)
+                .Where(u => !u.IsDeleted)
                 .ToListAsync();
 
             return new PaginatedResult<User>(users, totalUsers, pageNumber, pageSize);
+        }
+
+        public async Task<User> GetUserById(int id)
+        {
+            var user = await _context.Users.FirstAsync(u => u.Id == id && !u.IsDeleted);
+            return user;
         }
 
         

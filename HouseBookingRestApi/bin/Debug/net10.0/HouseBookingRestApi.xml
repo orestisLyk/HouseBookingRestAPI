@@ -1,0 +1,65 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>HouseBookingRestApi</name>
+    </assembly>
+    <members>
+        <member name="M:HouseBookingRestApi.Controllers.AuthController.Login(HouseBookingRestApi.DTO.UserLoginDTO)">
+            <summary>
+            Authenticates a user and returns a JWT token if the credentials are valid.
+            </summary>
+            <param name="dto">The user login data transfer object containing username and password.</param>
+            <returns>A JWT token if authentication is successful.</returns>
+        </member>
+        <member name="M:HouseBookingRestApi.Controllers.AuthController.Register(HouseBookingRestApi.DTO.UserRegisterDTO)">
+            <summary>
+            Registers a new user in the system.
+            </summary>
+            <param name="dto">The user registration data transfer object containing user details.</param>
+            <returns>The registered user data transfer object.</returns>
+        </member>
+        <member name="M:HouseBookingRestApi.Controllers.UserController.GetUserByUsername(System.String)">
+            <summary>
+            Gets the profile of a user by their username.
+            </summary>
+            <param name="username">The username of the user.</param>
+            <returns>The user's profile information.</returns>
+        </member>
+        <member name="T:HouseBookingRestApi.Migrations.InitialCreate">
+            <inheritdoc />
+        </member>
+        <member name="M:HouseBookingRestApi.Migrations.InitialCreate.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:HouseBookingRestApi.Migrations.InitialCreate.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:HouseBookingRestApi.Migrations.InitialCreate.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="T:HouseBookingRestApi.Migrations.AddHouseColumns">
+            <inheritdoc />
+        </member>
+        <member name="M:HouseBookingRestApi.Migrations.AddHouseColumns.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:HouseBookingRestApi.Migrations.AddHouseColumns.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:HouseBookingRestApi.Migrations.AddHouseColumns.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="T:HouseBookingRestApi.Migrations.AddUserUsernameAndEmailUniqueness">
+            <inheritdoc />
+        </member>
+        <member name="M:HouseBookingRestApi.Migrations.AddUserUsernameAndEmailUniqueness.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:HouseBookingRestApi.Migrations.AddUserUsernameAndEmailUniqueness.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:HouseBookingRestApi.Migrations.AddUserUsernameAndEmailUniqueness.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
+            <inheritdoc />
+        </member>
+    </members>
+</doc>

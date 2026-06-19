@@ -33,7 +33,7 @@ namespace HouseBookingRestApi.Service
         {
             var user = await unitOfWork.UserRepository.GetUserByUsernameAsync(dto.Username);
 
-            if (user == null)
+            if (user == null || user.IsDeleted)
             {
 
                 throw new EntityNotFoundException("No User with username " + dto.Username + " found");
@@ -64,7 +64,7 @@ namespace HouseBookingRestApi.Service
             try
             {
                 User? user = await unitOfWork.UserRepository.GetUserByUsernameAsync(username);
-                if (user == null)
+                if (user == null || user.IsDeleted)
                 {
                     throw new EntityNotFoundException($"Username {username} is not valid.");
                 }
@@ -133,7 +133,7 @@ namespace HouseBookingRestApi.Service
         {
             User? user = await unitOfWork.UserRepository.GetUserByUsernameAsync(dto.Username);
 
-            if (user == null)
+            if (user == null || user.IsDeleted)
             {
                 throw new InvalidCredentialsException("Invalid username or password.");
             }
@@ -177,6 +177,17 @@ namespace HouseBookingRestApi.Service
             //serialize token
             var userToken = new JwtSecurityTokenHandler().WriteToken(jwtSecurityToken);
             return userToken;
+        }
+
+        public async Task DeleteUserAsync(UserDeleteDTO dto)
+        {
+            var user = await unitOfWork.UserRepository.GetUserByIdAsync(dto.userId);
+            if(user.IsDeleted || user == null)
+            {
+                throw new EntityNotFoundException("User not found");
+            }
+            user.IsDeleted = true;
+            user.DeletedAt = DateTime.Now;
         }
 
 
