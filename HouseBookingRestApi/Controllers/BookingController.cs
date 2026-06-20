@@ -155,6 +155,10 @@ namespace HouseBookingRestApi.Controllers
                     {
                         throw new EntityForbiddenException("You are not authorized to cancel this booking.");
                     }
+                    if (booking.StartDate >= DateTime.Now)
+                    {
+                        throw new EntityForbiddenException("Cannot cancel booking after Check in Date");
+                    }
                     break;
                 case "Owner":
                     var bookingHouse = await houseService.GetHouseByIdAsync(booking.HouseId);
@@ -164,10 +168,16 @@ namespace HouseBookingRestApi.Controllers
                     {
                         throw new EntityForbiddenException("You are not authorized to cancel this booking.");
                     }
+                    if (booking.StartDate >= DateTime.Now)
+                    {
+                        throw new EntityForbiddenException("Cannot cancel booking after Check in Date");
+                    }
                     break;
                 default:
                     throw new EntityForbiddenException("You are not authorized to cancel this booking.");
             }
+
+            
             var dto = new BookingCancelDTO(id);
             await bookingService.DeleteBooking(dto);
             return NoContent();

@@ -21,11 +21,11 @@ namespace HouseBookingRestApi.Service
         {
             
             var booking = await unitOfWork.BookingRepository.GetBookingByIdAsync(id);
-            if (booking == null)
+            if (booking == null || booking.IsDeleted)
             {
-                logger.LogWarning($"Booking with ID {id} not found.");
                 throw new EntityNotFoundException($"Booking with ID {id} not found.");
             }
+            
             return mapper.Map<BookingReadOnlyDTO>(booking);
            
         }

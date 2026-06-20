@@ -11,18 +11,19 @@ namespace HouseBookingRestApi.Repositories
         }
         public async Task<Booking?> GetBookingByIdAsync(int id)
         {
-            return await _context.Bookings.FindAsync(id);
+            var booking = await _context.Bookings.FindAsync(id);
+            return booking;
         }
         public async Task<List<Booking>> GetBookingsByHouseIdAsync(int houseId)
         {
             return await _context.Bookings
-                .Where(b => b.HouseId == houseId)
+                .Where(b => b.HouseId == houseId && !b.IsDeleted)
                 .ToListAsync();
         }
         public async Task<List<Booking>> GetBookingsByRenterIdAsync(int renterId)
         {
             return await _context.Bookings
-                .Where(b => b.RenterId == renterId)
+                .Where(b => b.RenterId == renterId && !b.IsDeleted)
                 .ToListAsync();
         }
     }
