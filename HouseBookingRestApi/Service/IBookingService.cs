@@ -11,5 +11,7 @@ namespace HouseBookingRestApi.Service
         Task<List<BookingReadOnlyDTO>> GetBookingsByRenterIdAsync(int renterId);
 
         Task RegisterBookingAsync(BookingRegisterDTO dto);
+
+        Task DeleteBooking(BookingCancelDTO dto);
     }
 }

@@ -12,11 +12,9 @@ namespace HouseBookingRestApi.Controllers
     public class HouseController : ControllerBase
     {
         private readonly IHouseService houseService;
-        private readonly IUserService userService;
-        public HouseController(IHouseService houseService, IUserService userService)
+        public HouseController(IHouseService houseService)
         {
             this.houseService = houseService;
-            this.userService = userService;
         }
 
         [HttpGet("{id}")]

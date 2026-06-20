@@ -83,5 +83,17 @@ namespace HouseBookingRestApi.Service
            
         }
 
+        public async Task DeleteBooking(BookingCancelDTO dto)
+        {
+            var booking = await unitOfWork.BookingRepository.GetBookingByIdAsync(dto.Id);
+            if(booking == null)
+            {
+                throw new EntityNotFoundException("Booking not found.");
+            }
+            booking.IsDeleted = true;
+            await unitOfWork.SaveAsync();
+            logger.LogInformation($"Deleted booking with ID {booking.Id}.");
+        }
+
     }
 }
