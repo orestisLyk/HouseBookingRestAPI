@@ -24,7 +24,7 @@ namespace HouseBookingRestApi.DTO
         string LastName,
 
         [Required(ErrorMessage = "Role ID is required")]
-        [Range(0, 2, ErrorMessage = "Role ID must be 0, 1, or 2")]
+        [Range(1, 3, ErrorMessage = "Role ID must be 1, 2, or 3")]
         int RoleId
     );
 }

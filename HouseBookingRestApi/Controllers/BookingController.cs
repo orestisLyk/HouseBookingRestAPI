@@ -130,7 +130,7 @@ namespace HouseBookingRestApi.Controllers
             return Created();
         }
 
-        [HttpPost("cancel/{id}")]
+        [HttpDelete("{id}")]
         [Authorize("RelatedRenterAndOwnerOnly")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]

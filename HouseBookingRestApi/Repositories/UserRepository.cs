@@ -45,7 +45,7 @@ namespace HouseBookingRestApi.Repositories
             return new PaginatedResult<User>(users, totalUsers, pageNumber, pageSize);
         }
 
-        public async Task<User> GetUserById(int id)
+        public async Task<User> GetUserByIdAsync(int id)
         {
             var user = await _context.Users.FirstAsync(u => u.Id == id && !u.IsDeleted);
             return user;
