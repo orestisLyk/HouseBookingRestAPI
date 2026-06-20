@@ -57,5 +57,29 @@ namespace HouseBookingRestApi.Service
 
             return new PaginatedResult<HouseReadOnlyDTO>(dtoData, Houses.TotalCount, pageNumber, pageSize);
         }
+
+        public async Task<HouseReadOnlyDTO> UpdateHouseAsync(HouseUpdateDTO dto)
+        {
+            House? house = await unitOfWork.HouseRepository.GetHouseByIdAsync(dto.Id);
+            if (house == null)
+            {
+                throw new EntityNotFoundException($"House with ID {dto.Id} not found.");
+            }
+            mapper.Map(dto, house);
+            await unitOfWork.SaveAsync();
+            return mapper.Map<HouseReadOnlyDTO>(house);
+        }
+
+        public async Task<bool> DeleteHouseAsync(int id)
+        {
+            House? house = await unitOfWork.HouseRepository.GetHouseByIdAsync(id);
+            if (house == null)
+            {
+                throw new EntityNotFoundException($"House with ID {id} not found.");
+            }
+            house.IsDeleted = true;
+            await unitOfWork.SaveAsync();
+            return true;
+        }
     }
 }

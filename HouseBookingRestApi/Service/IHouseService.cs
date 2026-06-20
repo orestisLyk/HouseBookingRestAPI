@@ -12,5 +12,9 @@ namespace HouseBookingRestApi.Service
         Task<PaginatedResult<HouseReadOnlyDTO>> GetPaginatedHousesAsync(int pageNumber, int pageSize);
 
         Task<HouseReadOnlyDTO> CreateHouseAsync(HouseRegisterDTO dto);
+
+        Task<HouseReadOnlyDTO> UpdateHouseAsync(HouseUpdateDTO dto);
+
+        Task<bool> DeleteHouseAsync(int id);
     }
 }

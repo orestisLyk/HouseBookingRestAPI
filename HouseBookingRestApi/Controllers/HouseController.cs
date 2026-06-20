@@ -12,9 +12,11 @@ namespace HouseBookingRestApi.Controllers
     public class HouseController : ControllerBase
     {
         private readonly IHouseService houseService;
-        public HouseController(IHouseService houseService)
+        private readonly IUserService userService;
+        public HouseController(IHouseService houseService, IUserService userService)
         {
             this.houseService = houseService;
+            this.userService = userService;
         }
 
         [HttpGet("{id}")]
@@ -59,6 +61,45 @@ namespace HouseBookingRestApi.Controllers
         {
             var houses = await houseService.GetHousesByOwnerId(ownerId);
             return Ok(houses);
+        }
+
+        [HttpDelete("{id}")]
+        [Authorize(Policy = "AdminOrHouseOwner")]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<IActionResult> DeleteHouse(int id)
+        {
+            var currentUserRole = User.FindFirst(ClaimTypes.Role)?.Value;
+            switch (currentUserRole)
+            {
+                case "Admin":
+                    break; // Admin can delete any house
+                case "Owner":
+                    var house = await houseService.GetHouseByIdAsync(id);
+                    if (house == null)
+                    {
+                        throw new EntityNotFoundException($"House with ID {id} not found.");
+                    }
+
+                    // Get OwnerId from claims
+                    var ownerIdClaim = User.FindFirst("OwnerId")?.Value;
+                    if (ownerIdClaim == null)
+                    {
+                        throw new EntityForbiddenException("Owner ID not found in token.");
+                    }
+                    int currentOwnerId = int.Parse(ownerIdClaim);
+
+                    if (house.OwnerId != currentOwnerId)
+                    {
+                        throw new EntityForbiddenException("You are not authorized to delete this house.");
+                    }
+                    break;
+                default:
+                    throw new EntityForbiddenException("You are not authorized to delete houses.");
+            }
+            await houseService.DeleteHouseAsync(id);
+            return NoContent();
         }
     }
 }

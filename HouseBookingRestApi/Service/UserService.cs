@@ -144,11 +144,15 @@ namespace HouseBookingRestApi.Service
                 throw new InvalidCredentialsException("Invalid username or password.");
             }
 
-            string token = CreateUserToken(user.Id, user.Username, user.Email, user.Role);
+            // Get OwnerId and RenterId if they exist
+            int? ownerId = user.Owner?.Id;
+            int? renterId = user.Renter?.Id;
+
+            string token = CreateUserToken(user.Id, user.Username, user.Email, user.Role, ownerId, renterId);
             return new JwtTokenDTO(token);
         }
 
-        public string CreateUserToken(int userId, string username, string email, Role userRole)
+        public string CreateUserToken(int userId, string username, string email, Role userRole, int? ownerId = null, int? renterId = null)
         {
             var appSecurityKey = configuration.GetValue<string>("Jwt:Key");
             if (appSecurityKey == null)
@@ -165,6 +169,18 @@ namespace HouseBookingRestApi.Service
                 new Claim(ClaimTypes.Email, email),
                 new Claim(ClaimTypes.Role, userRole.Name)
             };
+
+            // Add OwnerId if user is an Owner
+            if (ownerId.HasValue)
+            {
+                ClaimsInfo.Add(new Claim("OwnerId", ownerId.Value.ToString()));
+            }
+
+            // Add RenterId if user is a Renter
+            if (renterId.HasValue)
+            {
+                ClaimsInfo.Add(new Claim("RenterId", renterId.Value.ToString()));
+            }
 
             var jwtSecurityToken = new JwtSecurityToken(
                 issuer: configuration["Jwt:Issuer"],
