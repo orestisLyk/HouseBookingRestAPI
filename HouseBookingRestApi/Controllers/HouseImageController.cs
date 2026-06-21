@@ -21,7 +21,7 @@ namespace HouseBookingRestApi.Controllers
         }
 
         [HttpPost]
-        [Authorize("RelatedOwnerOnly")]
+        [Authorize]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -71,7 +71,7 @@ namespace HouseBookingRestApi.Controllers
         }
 
         [HttpDelete("{id}")]
-        [Authorize("RelatedOwnerOnly")]
+        [Authorize]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]

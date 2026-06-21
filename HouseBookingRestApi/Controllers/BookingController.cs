@@ -21,7 +21,7 @@ namespace HouseBookingRestApi.Controllers
         }
 
         [HttpGet("{id}")]
-        [Authorize("RelatedRenterAndOwnerOnly")]
+        [Authorize]
         [ProducesResponseType(typeof(BookingReadOnlyDTO), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
@@ -61,7 +61,7 @@ namespace HouseBookingRestApi.Controllers
         }
 
         [HttpGet("by-renter/{renterId}")]
-        [Authorize("RelatedRenterOnly")]
+        [Authorize]
         [ProducesResponseType(typeof(IEnumerable<BookingReadOnlyDTO>), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         public async Task<ActionResult<IEnumerable<BookingReadOnlyDTO>>> GetBookingsByRenterId(int renterId)
@@ -83,7 +83,7 @@ namespace HouseBookingRestApi.Controllers
         }
 
         [HttpGet("by-house/{houseId}")]
-        [Authorize("RelatedOwnerOnly")]
+        [Authorize]
         [ProducesResponseType(typeof(IEnumerable<BookingReadOnlyDTO>), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -111,7 +111,7 @@ namespace HouseBookingRestApi.Controllers
         }
 
         [HttpPost]
-        [Authorize("RenterOnly")]
+        [Authorize]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         public async Task<ActionResult> CreateBooking([FromBody] BookingRegisterDTO dto)
@@ -131,7 +131,7 @@ namespace HouseBookingRestApi.Controllers
         }
 
         [HttpDelete("{id}")]
-        [Authorize("RelatedRenterAndOwnerOnly")]
+        [Authorize]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]

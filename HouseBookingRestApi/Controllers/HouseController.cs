@@ -1,5 +1,6 @@
 ﻿using HouseBookingRestApi.DTO;
 using HouseBookingRestApi.Exceptions;
+using HouseBookingRestApi.Models;
 using HouseBookingRestApi.Service;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -37,7 +38,7 @@ namespace HouseBookingRestApi.Controllers
         }
 
         [HttpPost]
-        [Authorize(Policy = "OwnerOnly")]
+        [Authorize]
         [ProducesResponseType(typeof(HouseReadOnlyDTO), StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
@@ -48,7 +49,16 @@ namespace HouseBookingRestApi.Controllers
             {
                 throw new EntityForbiddenException("Only users with the 'Owner' role can create houses.");
             }
-            var createdHouse = await houseService.CreateHouseAsync(dto);
+
+            var ownerIdClaim = User.FindFirst("OwnerId")?.Value;
+            if (ownerIdClaim == null)
+            {
+                throw new EntityForbiddenException("Owner ID not found in token.");
+            }
+
+            var houseDto = dto with { OwnerId = int.Parse(ownerIdClaim) };
+
+            var createdHouse = await houseService.CreateHouseAsync(houseDto);
             return CreatedAtAction(nameof(GetHouseById), new { id = createdHouse.Id }, createdHouse);
         }
 
@@ -62,7 +72,7 @@ namespace HouseBookingRestApi.Controllers
         }
 
         [HttpDelete("{id}")]
-        [Authorize(Policy = "AdminOrHouseOwner")]
+        [Authorize]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
