@@ -12,7 +12,7 @@
 
         public string Region { get; set; }
 
-        public float PricePerNight { get; set; }
+        public decimal PricePerNight { get; set; }
 
         public int OwnerId { get; set; }
 
