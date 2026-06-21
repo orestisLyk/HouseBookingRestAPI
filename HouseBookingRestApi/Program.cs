@@ -131,6 +131,7 @@ namespace HouseBookingRestApi
             builder.Services.AddScoped<IHouseService, HouseService>();
             builder.Services.AddScoped<IBookingService, BookingService>();
             builder.Services.AddScoped<IUserService, UserService>();
+            builder.Services.AddScoped<IRoleService, RoleService>();
 
             builder.Services.AddSingleton(cloudinary);
 
