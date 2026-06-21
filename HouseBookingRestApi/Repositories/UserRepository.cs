@@ -16,6 +16,8 @@ namespace HouseBookingRestApi.Repositories
         public async Task<User?> GetUserAsync(string username, string hashedPassword)
         {
             User? user = await _context.Users.Include(u => u.Role)
+                .Include(u => u.Owner)
+                .Include(u => u.Renter)
                 .FirstOrDefaultAsync(u => u.Username == username);
 
             if(user == null || user.Password != hashedPassword)
@@ -29,6 +31,8 @@ namespace HouseBookingRestApi.Repositories
         public async Task<User?> GetUserByUsernameAsync(string username)
         {
             return await _context.Users.Include(u => u.Role)
+                .Include(u => u.Owner)
+                .Include(u => u.Renter)
                 .FirstOrDefaultAsync(u => u.Username == username);
         }
 

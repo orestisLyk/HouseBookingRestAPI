@@ -61,5 +61,17 @@
         <member name="M:HouseBookingRestApi.Migrations.AddUserUsernameAndEmailUniqueness.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
             <inheritdoc />
         </member>
+        <member name="T:HouseBookingRestApi.Migrations.ChangePricePerNightToDecimal">
+            <inheritdoc />
+        </member>
+        <member name="M:HouseBookingRestApi.Migrations.ChangePricePerNightToDecimal.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:HouseBookingRestApi.Migrations.ChangePricePerNightToDecimal.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:HouseBookingRestApi.Migrations.ChangePricePerNightToDecimal.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
+            <inheritdoc />
+        </member>
     </members>
 </doc>
