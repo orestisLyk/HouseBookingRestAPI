@@ -109,6 +109,8 @@ namespace HouseBookingRestApi.Service
                     {
                         User = user
                     };
+                    user.Owner = owner;
+
                     await unitOfWork.OwnerRepository.AddAsync(owner);
                     break;
 
@@ -117,6 +119,7 @@ namespace HouseBookingRestApi.Service
                     {
                         User = user
                     };
+                    user.Renter = renter;
                     await unitOfWork.RenterRepository.AddAsync(renter);
                     break;
 
