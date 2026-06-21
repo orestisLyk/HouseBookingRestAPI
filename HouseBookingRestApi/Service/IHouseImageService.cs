@@ -9,5 +9,7 @@ namespace HouseBookingRestApi.Service
         Task<IEnumerable<HouseImageReadOnlyDTO>> GetImagesByHouseIdAsync(int houseId);
 
         Task CreateImageAsync(HouseImageCreateDTO dto);
+
+        Task DeleteImageAsync(int imageId);
     }
 }

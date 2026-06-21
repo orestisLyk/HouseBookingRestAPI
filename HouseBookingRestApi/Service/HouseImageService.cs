@@ -56,5 +56,16 @@ namespace HouseBookingRestApi.Service
             
 
         }
+
+        public async Task DeleteImageAsync(int imageId)
+        {
+            var houseImage = await unitOfWork.HouseImageRepository.GetHouseImageByIdAsync(imageId);
+            if (houseImage == null)
+            {
+                throw new EntityNotFoundException($"House image with ID {imageId} not found.");
+            }
+            houseImage.IsDeleted = true;
+            await unitOfWork.SaveAsync();
+        }
     }
 }

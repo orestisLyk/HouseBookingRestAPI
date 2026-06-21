@@ -24,6 +24,7 @@ namespace HouseBookingRestApi.Controllers
         [Authorize("RelatedOwnerOnly")]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<ActionResult> CreateImage([FromBody] HouseImageCreateDTO dto)
         {
             var currentRole = User.FindFirst(ClaimTypes.Role)?.Value;
@@ -67,6 +68,38 @@ namespace HouseBookingRestApi.Controllers
                 throw new EntityNotFoundException("Image not found");
             }
             return Ok(image);
+        }
+
+        [HttpDelete("{id}")]
+        [Authorize("RelatedOwnerOnly")]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<ActionResult> DeleteImage(int id)
+        {
+            var currentRole = User.FindFirst(ClaimTypes.Role)?.Value;
+            if (currentRole != "Owner")
+            {
+                throw new EntityForbiddenException("Only owners can delete house images");
+            }
+            var image = await imageService.GetImageByIdAsync(id);
+            if (image == null)
+            {
+                throw new EntityNotFoundException("Image not found");
+            }
+            var house = await houseService.GetHouseByIdAsync(image.HouseId);
+            if (house == null)
+            {
+                throw new EntityNotFoundException("House not found");
+            }
+            var ownerId = house.OwnerId;
+            var currentOwnerId = int.Parse(User.FindFirst("OwnerId")?.Value);
+            if(ownerId != currentOwnerId)
+            {
+                throw new EntityForbiddenException("Cannot delete an image for another owners house");
+            }
+            await imageService.DeleteImageAsync(id);
+            return NoContent();
         }
     }
 }

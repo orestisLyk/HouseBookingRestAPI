@@ -11,11 +11,11 @@ namespace HouseBookingRestApi.Repositories
         }
         public async Task<HouseImage?> GetHouseImageByIdAsync(int houseImageId)
         {
-            return await _context.HouseImages.FirstOrDefaultAsync(h => h.Id == houseImageId);
+            return await _context.HouseImages.FirstOrDefaultAsync(h => h.Id == houseImageId && !h.IsDeleted);
         }
         public async Task<IEnumerable<HouseImage>> GetHouseImagesByHouseIdAsync(int houseId)
         {
-            return await _context.HouseImages.Where(h => h.HouseId == houseId).ToListAsync();
+            return await _context.HouseImages.Where(h => h.HouseId == houseId && !h.IsDeleted).ToListAsync();
         }
     }
 }
