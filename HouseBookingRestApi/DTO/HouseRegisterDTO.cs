@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.Text.Json.Serialization;
 
 namespace HouseBookingRestApi.DTO
 {
@@ -17,9 +18,11 @@ namespace HouseBookingRestApi.DTO
 
         [Required(ErrorMessage = "Price per night is required")]
         [Range(0.01, double.MaxValue, ErrorMessage = "Price per night must be greater than 0")]
-        decimal PricePerNight,
-
-        [Required(ErrorMessage = "Owner ID is required")]
-        int OwnerId
-    );
+        decimal PricePerNight
+        
+    )
+    {
+        [JsonIgnore]
+        public int OwnerId { get; init; }
+    }
 }
