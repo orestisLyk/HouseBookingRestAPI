@@ -29,6 +29,7 @@ namespace HouseBookingRestApi.Repositories
             OwnerRepository = new OwnerRepository(context);
             HouseRepository = new HouseRepository(context);
             HouseImageRepository = new HouseImageRepository(context);
+            BookingRepository = new BookingRepository(context);
         }
 
         public async Task<bool> SaveAsync()
