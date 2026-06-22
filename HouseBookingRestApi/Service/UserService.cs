@@ -201,7 +201,7 @@ namespace HouseBookingRestApi.Service
         public async Task DeleteUserAsync(UserDeleteDTO dto)
         {
             var user = await unitOfWork.UserRepository.GetUserByIdAsync(dto.userId);
-            if(user.IsDeleted || user == null)
+            if(user == null || user.IsDeleted)
             {
                 throw new EntityNotFoundException("User not found");
             }
