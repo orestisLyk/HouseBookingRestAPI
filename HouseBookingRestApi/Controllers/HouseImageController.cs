@@ -22,10 +22,11 @@ namespace HouseBookingRestApi.Controllers
 
         [HttpPost]
         [Authorize]
+        [Consumes("multipart/form-data")]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<ActionResult> CreateImage([FromBody] HouseImageCreateDTO dto)
+        public async Task<ActionResult> CreateImage([FromForm] HouseImageCreateDTO dto)
         {
             var currentRole = User.FindFirst(ClaimTypes.Role)?.Value;
             if(currentRole != "Owner")
