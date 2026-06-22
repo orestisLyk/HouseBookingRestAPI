@@ -11,7 +11,10 @@ A comprehensive RESTful API for managing house rentals, bookings, and user authe
 - [Technology Stack](#-technology-stack)
 - [Architecture](#-architecture)
 - [Getting Started](#-getting-started)
+  - [Docker Setup (Recommended)](#-quick-start-with-docker-recommended)
+  - [Local Development Setup](#-local-development-setup)
 - [Configuration](#-configuration)
+- [Docker Deployment](#-docker-deployment)
 - [API Endpoints](#-api-endpoints)
 - [Authentication](#-authentication)
 - [Database Schema](#-database-schema)
@@ -45,6 +48,8 @@ A comprehensive RESTful API for managing house rentals, bookings, and user authe
   - Logging with Serilog
   - API documentation with Swagger/OpenAPI
   - Unit tested (158 test cases covering repositories, services, and controllers)
+  - **Docker support** with docker-compose for easy deployment
+  - Environment-based configuration
 
 ## 🛠 Technology Stack
 
@@ -55,6 +60,11 @@ A comprehensive RESTful API for managing house rentals, bookings, and user authe
 
 ### Database
 - **SQL Server** - Primary database
+- **SQL Server 2022** (Docker) - Containerized database for development
+
+### Deployment
+- **Docker** - Containerization
+- **Docker Compose** - Multi-container orchestration
 
 ### Authentication & Security
 - **JWT Bearer Authentication** - Token-based authentication
@@ -108,12 +118,104 @@ HouseBookingRestApi.Tests/
 
 ### Prerequisites
 
+#### Option 1: Docker (Recommended)
+- [Docker Desktop](https://www.docker.com/products/docker-desktop/) 
+- [Docker Compose](https://docs.docker.com/compose/install/) (usually included with Docker Desktop)
+
+#### Option 2: Local Development
 - [.NET 10.0 SDK](https://dotnet.microsoft.com/download/dotnet/10.0) or later
 - [SQL Server](https://www.microsoft.com/sql-server/sql-server-downloads) (LocalDB, Express, or full version)
 - [Visual Studio 2026](https://visualstudio.microsoft.com/) or [VS Code](https://code.visualstudio.com/)
+
+#### Required for Both
 - [Cloudinary Account](https://cloudinary.com/) (for image storage)
 
 ### Installation
+
+#### 🐳 Quick Start with Docker (Recommended)
+
+#### 🐳 Quick Start with Docker (Recommended)
+
+1. **Clone the repository**
+   ```bash
+   git clone https://github.com/orestisLyk/HouseBookingRestAPI.git
+   cd HouseBookingRestAPI
+   ```
+
+2. **Set up environment variables**
+
+   Copy the example environment file and configure it:
+   ```bash
+   cp .env.example .env
+   ```
+
+   Edit `.env` with your configuration:
+   ```env
+   # JWT Configuration
+   JWT_ISSUER=HouseBookingAPI
+   JWT_AUDIENCE=HouseBookingAPIUsers
+   JWT_SECRET=YourSuperSecretKeyHere_MustBeAtLeast32CharactersLong!
+
+   # CORS
+   CORS_ORIGINS=http://localhost:3000,http://localhost:4200
+
+   # SQL Server
+   SA_PASSWORD=YourStrong@Password123
+   DB_HOST=sqlserver
+   DB_PORT=1437
+   DB_NAME=HouseBookingDb
+   DB_USER=sa
+   DB_USER_PASSWORD=YourStrong@Password123
+
+   # Application
+   ASPNETCORE_ENVIRONMENT=Development
+   APP_PORT=5000
+
+   # Cloudinary (Get from https://cloudinary.com/console)
+   CLOUDINARY_URL=cloudinary://your_api_key:your_api_secret@your_cloud_name
+   ```
+
+3. **Start the application**
+   ```bash
+   docker-compose up -d
+   ```
+
+   This will:
+   - Pull and start SQL Server 2022
+   - Build and start the API
+   - Automatically apply database migrations
+   - Set up networking between containers
+
+4. **Access the API**
+   - API: `http://localhost:5000`
+   - Swagger UI: `http://localhost:5000/swagger`
+   - SQL Server: `localhost:1437` (username: `sa`, password: from `.env`)
+
+5. **View logs**
+   ```bash
+   # View all logs
+   docker-compose logs -f
+
+   # View API logs only
+   docker-compose logs -f api
+
+   # View database logs only
+   docker-compose logs -f sqlserver
+   ```
+
+6. **Stop the application**
+   ```bash
+   # Stop and keep data
+   docker-compose stop
+
+   # Stop and remove containers (keeps volumes)
+   docker-compose down
+
+   # Stop and remove everything including data
+   docker-compose down -v
+   ```
+
+#### 💻 Local Development Setup
 
 1. **Clone the repository**
    ```bash
@@ -130,7 +232,7 @@ HouseBookingRestApi.Tests/
 
 3. **Configure the database connection**
 
-   Update `appsettings.json` or create `appsettings.Development.json`:
+   Update `appsettings.Development.json` in the `HouseBookingRestApi` folder:
    ```json
    {
 	 "ConnectionStrings": {
@@ -195,6 +297,82 @@ The application uses SQL Server. Update the connection string for your environme
 - **LocalDB** (Development): `Server=(localdb)\\mssqllocaldb;Database=HouseBookingDb;Trusted_Connection=true`
 - **SQL Server Express**: `Server=localhost\\SQLEXPRESS;Database=HouseBookingDb;Trusted_Connection=true`
 - **Azure SQL**: Use connection string from Azure portal
+- **Docker**: `Server=sqlserver;Database=HouseBookingDb;User Id=sa;Password=YourPassword;TrustServerCertificate=True`
+
+## 🐳 Docker Deployment
+
+The project includes complete Docker support for easy deployment and development.
+
+### Docker Architecture
+
+```
+┌─────────────────────┐
+│   Docker Compose    │
+└──────────┬──────────┘
+           │
+     ┌─────┴─────┐
+     │           │
+┌────▼────┐ ┌───▼──────┐
+│   API   │ │ SQL      │
+│ :5000   │ │ Server   │
+│         │ │ :1437    │
+└─────────┘ └──────────┘
+     │           │
+     └─────┬─────┘
+       Network
+```
+
+### Docker Files
+
+- **`Dockerfile`** - Multi-stage build for .NET 10.0 API
+- **`docker-compose.yml`** - Orchestrates API + SQL Server
+- **`.dockerignore`** - Excludes unnecessary files from Docker context
+- **`.env`** - Environment variables (not committed)
+- **`.env.example`** - Template for environment variables
+
+### Docker Commands
+
+```bash
+# Build and start all services
+docker-compose up -d
+
+# Rebuild after code changes
+docker-compose up -d --build
+
+# View running containers
+docker-compose ps
+
+# View logs (follow mode)
+docker-compose logs -f
+
+# Stop all services
+docker-compose stop
+
+# Remove containers but keep data
+docker-compose down
+
+# Remove everything including volumes (DESTRUCTIVE)
+docker-compose down -v
+
+# Execute command in running container
+docker-compose exec api bash
+
+# Run database migrations in container
+docker-compose exec api dotnet ef database update
+```
+
+### Production Deployment
+
+For production, update your `.env`:
+
+```env
+ASPNETCORE_ENVIRONMENT=Production
+JWT_SECRET=<strong-random-secret-at-least-32-chars>
+SA_PASSWORD=<strong-database-password>
+CORS_ORIGINS=https://yourdomain.com
+```
+
+And adjust `docker-compose.yml` for production settings (remove debug ports, add SSL, etc.).
 
 ## 📚 API Endpoints
 
@@ -465,6 +643,15 @@ Contributions are welcome! Please follow these steps:
 - Write unit tests for new features
 - Update documentation as needed
 - Ensure all tests pass before submitting PR
+
+### Important: Security
+
+⚠️ **Never commit sensitive information:**
+- ❌ `.env` file (contains secrets)
+- ❌ Database connection strings with passwords
+- ❌ API keys or tokens
+- ✅ Use `.env.example` as a template
+- ✅ The `.gitignore` is configured to exclude `.env` files
 
 ## 📝 License
 
