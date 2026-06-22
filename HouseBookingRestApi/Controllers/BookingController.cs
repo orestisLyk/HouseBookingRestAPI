@@ -69,14 +69,17 @@ namespace HouseBookingRestApi.Controllers
             var currentUserRole = User.FindFirst(ClaimTypes.Role)?.Value;
             if(currentUserRole != "Admin" && currentUserRole != "Renter")
             {
-                throw new EntityForbiddenException("You are not authorized to view bookings.");
+                throw new EntityForbiddenException("You are not authorized to view bookings by renter.");
             }
-
-            var currentRenterId = int.Parse(User.FindFirst("RenterId")?.Value);
-            if (currentUserRole == "Renter" && currentRenterId != renterId)
+            if(currentUserRole == "Renter")
             {
-                throw new EntityForbiddenException("You are not authorized to view these bookings.");
+                var currentRenterId = int.Parse(User.FindFirst("RenterId")?.Value);
+                if (currentRenterId != renterId)
+                {
+                    throw new EntityForbiddenException("You are not authorized to view another renter's bookings.");
+                }
             }
+            
 
             var bookings = await bookingService.GetBookingsByRenterIdAsync(renterId);
             return Ok(bookings);
