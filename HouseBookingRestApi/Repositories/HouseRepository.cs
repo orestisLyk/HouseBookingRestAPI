@@ -15,6 +15,7 @@ namespace HouseBookingRestApi.Repositories
         {
             return await _context.Houses.Include(h => h.Owner)
                 .Include(h => h.Bookings)
+                .Include(h => h.HouseImages)
                 .FirstOrDefaultAsync(h => h.Id == houseId && !h.IsDeleted);
         }
 
@@ -23,6 +24,7 @@ namespace HouseBookingRestApi.Repositories
             return await _context.Houses
                 .Include(h => h.Owner)
                 .Include(h => h.Bookings)
+                .Include(h => h.HouseImages)
                 .Where(h => h.OwnerId == ownerId && !h.IsDeleted)
                 .ToListAsync();
         }
@@ -33,6 +35,7 @@ namespace HouseBookingRestApi.Repositories
             var houses = await _context.Houses
                 .Include(h => h.Owner)
                 .Include(h => h.Bookings)
+                .Include(h => h.HouseImages)
                 .Where(h => !h.IsDeleted)
                 .OrderBy(h => h.Id)
                 .Skip((pageNumber - 1) * pageSize)
