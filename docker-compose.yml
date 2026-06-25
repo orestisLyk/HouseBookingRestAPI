@@ -36,6 +36,8 @@ services:
       - ASPNETCORE_URLS=http://+:8080
       - CLOUDINARY_URL=${CLOUDINARY_URL}
       - ConnectionStrings__DefaultConnection=Server=sqlserver;Database=${DB_NAME};User Id=${DB_USER};Password=${DB_USER_PASSWORD};TrustServerCertificate=True;
+      - ADMIN__USERNAME=${ADMIN_USERNAME}
+      - ADMIN__PASSWORD=${ADMIN_PASSWORD}
     ports:
       - "5000:8080"
     depends_on:
