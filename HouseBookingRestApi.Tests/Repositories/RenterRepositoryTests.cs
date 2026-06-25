@@ -184,8 +184,8 @@ namespace HouseBookingRestApi.Tests.Repositories
             var booking1 = new Booking
             {
                 Id = 1,
-                StartDate = DateTime.UtcNow.AddDays(1),
-                EndDate = DateTime.UtcNow.AddDays(3),
+                StartDate = DateOnly.FromDateTime(DateTime.UtcNow.AddDays(1)),
+                EndDate = DateOnly.FromDateTime(DateTime.UtcNow.AddDays(3)),
                 HouseId = 1,
                 House = house,
                 RenterId = 1,
@@ -194,8 +194,8 @@ namespace HouseBookingRestApi.Tests.Repositories
             var booking2 = new Booking
             {
                 Id = 2,
-                StartDate = DateTime.UtcNow.AddDays(5),
-                EndDate = DateTime.UtcNow.AddDays(7),
+                StartDate = DateOnly.FromDateTime(DateTime.UtcNow.AddDays(5)),
+                EndDate = DateOnly.FromDateTime(DateTime.UtcNow.AddDays(7)),
                 HouseId = 1,
                 House = house,
                 RenterId = 1,
@@ -220,3 +220,4 @@ namespace HouseBookingRestApi.Tests.Repositories
         }
     }
 }
+

@@ -48,7 +48,7 @@ namespace HouseBookingRestApi.Tests.Controllers
         {
             // Arrange
             SetupUserClaims("Admin");
-            var booking = new BookingReadOnlyDTO(1, DateTime.Now.AddDays(1), DateTime.Now.AddDays(5), 1, 1, "Test House");
+            var booking = new BookingReadOnlyDTO(1, DateOnly.FromDateTime(DateTime.Now.AddDays(1)), DateOnly.FromDateTime(DateTime.Now.AddDays(5)), 1, 1, "Test House");
             bookingService.GetBookingByIdAsync(1).Returns(booking);
 
             // Act
@@ -65,7 +65,7 @@ namespace HouseBookingRestApi.Tests.Controllers
         {
             // Arrange
             SetupUserClaims("Renter", renterId: 1);
-            var booking = new BookingReadOnlyDTO(1, DateTime.Now.AddDays(1), DateTime.Now.AddDays(5), 1, 1, "Test House");
+            var booking = new BookingReadOnlyDTO(1, DateOnly.FromDateTime(DateTime.Now.AddDays(1)), DateOnly.FromDateTime(DateTime.Now.AddDays(5)), 1, 1, "Test House");
             bookingService.GetBookingByIdAsync(1).Returns(booking);
 
             // Act
@@ -82,7 +82,7 @@ namespace HouseBookingRestApi.Tests.Controllers
         {
             // Arrange
             SetupUserClaims("Renter", renterId: 2);
-            var booking = new BookingReadOnlyDTO(1, DateTime.Now.AddDays(1), DateTime.Now.AddDays(5), 1, 1, "Test House");
+            var booking = new BookingReadOnlyDTO(1, DateOnly.FromDateTime(DateTime.Now.AddDays(1)), DateOnly.FromDateTime(DateTime.Now.AddDays(5)), 1, 1, "Test House");
             bookingService.GetBookingByIdAsync(1).Returns(booking);
 
             // Act & Assert
@@ -96,7 +96,7 @@ namespace HouseBookingRestApi.Tests.Controllers
         {
             // Arrange
             SetupUserClaims("Owner", ownerId: 1);
-            var booking = new BookingReadOnlyDTO(1, DateTime.Now.AddDays(1), DateTime.Now.AddDays(5), 1, 1, "Test House");
+            var booking = new BookingReadOnlyDTO(1, DateOnly.FromDateTime(DateTime.Now.AddDays(1)), DateOnly.FromDateTime(DateTime.Now.AddDays(5)), 1, 1, "Test House");
             var house = new HouseReadOnlyDTO 
             { 
                 Id = 1, 
@@ -123,7 +123,7 @@ namespace HouseBookingRestApi.Tests.Controllers
         {
             // Arrange
             SetupUserClaims("Owner", ownerId: 2);
-            var booking = new BookingReadOnlyDTO(1, DateTime.Now.AddDays(1), DateTime.Now.AddDays(5), 1, 1, "Test House");
+            var booking = new BookingReadOnlyDTO(1, DateOnly.FromDateTime(DateTime.Now.AddDays(1)), DateOnly.FromDateTime(DateTime.Now.AddDays(5)), 1, 1, "Test House");
             var house = new HouseReadOnlyDTO 
             { 
                 Id = 1, 
@@ -162,7 +162,7 @@ namespace HouseBookingRestApi.Tests.Controllers
             SetupUserClaims("Renter", renterId: 1);
             var bookings = new List<BookingReadOnlyDTO>
             {
-                new BookingReadOnlyDTO(1, DateTime.Now.AddDays(1), DateTime.Now.AddDays(5), 1, 1, "Test House")
+                new BookingReadOnlyDTO(1, DateOnly.FromDateTime(DateTime.Now.AddDays(1)), DateOnly.FromDateTime(DateTime.Now.AddDays(5)), 1, 1, "Test House")
             };
             bookingService.GetBookingsByRenterIdAsync(1).Returns(bookings);
 
@@ -195,7 +195,7 @@ namespace HouseBookingRestApi.Tests.Controllers
             SetupUserClaims("Admin", renterId: 1);
             var bookings = new List<BookingReadOnlyDTO>
             {
-                new BookingReadOnlyDTO(1, DateTime.Now.AddDays(1), DateTime.Now.AddDays(5), 1, 1, "Test House")
+                new BookingReadOnlyDTO(1, DateOnly.FromDateTime(DateTime.Now.AddDays(1)), DateOnly.FromDateTime(DateTime.Now.AddDays(5)), 1, 1, "Test House")
             };
             bookingService.GetBookingsByRenterIdAsync(1).Returns(bookings);
 
@@ -224,7 +224,7 @@ namespace HouseBookingRestApi.Tests.Controllers
             };
             var bookings = new List<BookingReadOnlyDTO>
             {
-                new BookingReadOnlyDTO(1, DateTime.Now.AddDays(1), DateTime.Now.AddDays(5), 1, 1, "Test House")
+                new BookingReadOnlyDTO(1, DateOnly.FromDateTime(DateTime.Now.AddDays(1)), DateOnly.FromDateTime(DateTime.Now.AddDays(5)), 1, 1, "Test House")
             };
             houseService.GetHouseByIdAsync(1).Returns(house);
             bookingService.GetBookingsByHouseIdAsync(1).Returns(bookings);
@@ -278,7 +278,7 @@ namespace HouseBookingRestApi.Tests.Controllers
         {
             // Arrange
             SetupUserClaims("Renter", renterId: 1);
-            var dto = new BookingRegisterDTO(1, 1, DateTime.Now.AddDays(1), DateTime.Now.AddDays(5));
+            var dto = new BookingRegisterDTO(1, 1, DateOnly.FromDateTime(DateTime.Now.AddDays(1)), DateOnly.FromDateTime(DateTime.Now.AddDays(5)));
             bookingService.RegisterBookingAsync(dto).Returns(Task.CompletedTask);
 
             // Act
@@ -293,7 +293,7 @@ namespace HouseBookingRestApi.Tests.Controllers
         {
             // Arrange
             SetupUserClaims("Renter", renterId: 2);
-            var dto = new BookingRegisterDTO(1, 1, DateTime.Now.AddDays(1), DateTime.Now.AddDays(5));
+            var dto = new BookingRegisterDTO(1, 1, DateOnly.FromDateTime(DateTime.Now.AddDays(1)), DateOnly.FromDateTime(DateTime.Now.AddDays(5)));
 
             // Act & Assert
             await Assert.ThrowsAsync<EntityForbiddenException>(
@@ -306,7 +306,7 @@ namespace HouseBookingRestApi.Tests.Controllers
         {
             // Arrange
             SetupUserClaims("Owner", ownerId: 1);
-            var dto = new BookingRegisterDTO(1, 1, DateTime.Now.AddDays(1), DateTime.Now.AddDays(5));
+            var dto = new BookingRegisterDTO(1, 1, DateOnly.FromDateTime(DateTime.Now.AddDays(1)), DateOnly.FromDateTime(DateTime.Now.AddDays(5)));
 
             // Act & Assert
             await Assert.ThrowsAsync<EntityForbiddenException>(
@@ -319,7 +319,7 @@ namespace HouseBookingRestApi.Tests.Controllers
         {
             // Arrange
             SetupUserClaims("Admin");
-            var booking = new BookingReadOnlyDTO(1, DateTime.Now.AddDays(1), DateTime.Now.AddDays(5), 1, 1, "Test House");
+            var booking = new BookingReadOnlyDTO(1, DateOnly.FromDateTime(DateTime.Now.AddDays(1)), DateOnly.FromDateTime(DateTime.Now.AddDays(5)), 1, 1, "Test House");
             bookingService.GetBookingByIdAsync(1).Returns(booking);
             bookingService.DeleteBooking(Arg.Any<BookingCancelDTO>()).Returns(Task.CompletedTask);
 
@@ -335,7 +335,7 @@ namespace HouseBookingRestApi.Tests.Controllers
         {
             // Arrange
             SetupUserClaims("Renter", renterId: 1);
-            var booking = new BookingReadOnlyDTO(1, DateTime.Now.AddDays(1), DateTime.Now.AddDays(5), 1, 1, "Test House");
+            var booking = new BookingReadOnlyDTO(1, DateOnly.FromDateTime(DateTime.Now.AddDays(1)), DateOnly.FromDateTime(DateTime.Now.AddDays(5)), 1, 1, "Test House");
             bookingService.GetBookingByIdAsync(1).Returns(booking);
             bookingService.DeleteBooking(Arg.Any<BookingCancelDTO>()).Returns(Task.CompletedTask);
 
@@ -351,7 +351,7 @@ namespace HouseBookingRestApi.Tests.Controllers
         {
             // Arrange
             SetupUserClaims("Renter", renterId: 1);
-            var booking = new BookingReadOnlyDTO(1, DateTime.Now.AddDays(-1), DateTime.Now.AddDays(5), 1, 1, "Test House");
+            var booking = new BookingReadOnlyDTO(1, DateOnly.FromDateTime(DateTime.Now).AddDays(-1), DateOnly.FromDateTime(DateTime.Now.AddDays(5)), 1, 1, "Test House");
             bookingService.GetBookingByIdAsync(1).Returns(booking);
 
             // Act & Assert
@@ -365,7 +365,7 @@ namespace HouseBookingRestApi.Tests.Controllers
         {
             // Arrange
             SetupUserClaims("Owner", ownerId: 1);
-            var booking = new BookingReadOnlyDTO(1, DateTime.Now.AddDays(1), DateTime.Now.AddDays(5), 1, 1, "Test House");
+            var booking = new BookingReadOnlyDTO(1, DateOnly.FromDateTime(DateTime.Now.AddDays(1)), DateOnly.FromDateTime(DateTime.Now.AddDays(5)), 1, 1, "Test House");
             var house = new HouseReadOnlyDTO 
             { 
                 Id = 1, 
@@ -400,3 +400,7 @@ namespace HouseBookingRestApi.Tests.Controllers
         }
     }
 }
+
+
+
+

@@ -9,7 +9,7 @@ namespace HouseBookingRestApi.DTO
         [Range(0, int.MaxValue)]
         int RenterId,
 
-        DateTime StartDate,
-        DateTime EndDate
+        DateOnly StartDate,
+        DateOnly EndDate
     );
 }

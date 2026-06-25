@@ -33,7 +33,7 @@ namespace HouseBookingRestApi.Tests.Services
         {
             // Arrange
             var booking = new Booking { Id = 1, HouseId = 1, RenterId = 1, IsDeleted = false };
-            var bookingDTO = new BookingReadOnlyDTO(1, DateTime.UtcNow, DateTime.UtcNow.AddDays(2), 1, 1, "Test House");
+            var bookingDTO = new BookingReadOnlyDTO(1, DateOnly.FromDateTime(DateTime.UtcNow), DateOnly.FromDateTime(DateTime.UtcNow.AddDays(2)), 1, 1, "Test House");
 
             unitOfWork.BookingRepository.GetBookingByIdAsync(1).Returns(booking);
             mapper.Map<BookingReadOnlyDTO>(booking).Returns(bookingDTO);
@@ -83,8 +83,8 @@ namespace HouseBookingRestApi.Tests.Services
             };
             var bookingDTOs = new List<BookingReadOnlyDTO>
             {
-                new BookingReadOnlyDTO(1, DateTime.UtcNow, DateTime.UtcNow.AddDays(2), 1, 1, "House 1"),
-                new BookingReadOnlyDTO(2, DateTime.UtcNow, DateTime.UtcNow.AddDays(2), 1, 2, "House 1")
+                new BookingReadOnlyDTO(1, DateOnly.FromDateTime(DateTime.UtcNow), DateOnly.FromDateTime(DateTime.UtcNow.AddDays(2)), 1, 1, "House 1"),
+                new BookingReadOnlyDTO(2, DateOnly.FromDateTime(DateTime.UtcNow), DateOnly.FromDateTime(DateTime.UtcNow.AddDays(2)), 1, 2, "House 1")
             };
 
             unitOfWork.BookingRepository.GetBookingsByHouseIdAsync(1).Returns(bookings);
@@ -109,8 +109,8 @@ namespace HouseBookingRestApi.Tests.Services
             };
             var bookingDTOs = new List<BookingReadOnlyDTO>
             {
-                new BookingReadOnlyDTO(1, DateTime.UtcNow, DateTime.UtcNow.AddDays(2), 1, 1, "House 1"),
-                new BookingReadOnlyDTO(2, DateTime.UtcNow, DateTime.UtcNow.AddDays(2), 2, 1, "House 2")
+                new BookingReadOnlyDTO(1, DateOnly.FromDateTime(DateTime.UtcNow), DateOnly.FromDateTime(DateTime.UtcNow.AddDays(2)), 1, 1, "House 1"),
+                new BookingReadOnlyDTO(2, DateOnly.FromDateTime(DateTime.UtcNow), DateOnly.FromDateTime(DateTime.UtcNow.AddDays(2)), 2, 1, "House 2")
             };
 
             unitOfWork.BookingRepository.GetBookingsByRenterIdAsync(1).Returns(bookings);
@@ -128,7 +128,7 @@ namespace HouseBookingRestApi.Tests.Services
         public async Task RegisterBookingAsync_WithValidData_CreatesBooking()
         {
             // Arrange
-            var dto = new BookingRegisterDTO(1, 1, DateTime.UtcNow.AddDays(1), DateTime.UtcNow.AddDays(3));
+            var dto = new BookingRegisterDTO(1, 1, DateOnly.FromDateTime(DateTime.UtcNow.AddDays(1)), DateOnly.FromDateTime(DateTime.UtcNow.AddDays(3)));
             var house = new House { Id = 1, Name = "Test House" };
             var renter = new Renter { Id = 1 };
             var booking = new Booking { Id = 1, HouseId = 1, RenterId = 1 };
@@ -150,7 +150,7 @@ namespace HouseBookingRestApi.Tests.Services
         public async Task RegisterBookingAsync_WithPastStartDate_ThrowsInvalidBookingDatesException()
         {
             // Arrange
-            var dto = new BookingRegisterDTO(1, 1, DateTime.UtcNow.AddDays(-1), DateTime.UtcNow.AddDays(1));
+            var dto = new BookingRegisterDTO(1, 1, DateOnly.FromDateTime(DateTime.UtcNow.AddDays(-1)), DateOnly.FromDateTime(DateTime.UtcNow.AddDays(1)));
 
             // Act & Assert
             await Assert.ThrowsAsync<InvalidBookingDatesException>(
@@ -162,7 +162,7 @@ namespace HouseBookingRestApi.Tests.Services
         public async Task RegisterBookingAsync_WithEndDateBeforeStartDate_ThrowsInvalidBookingDatesException()
         {
             // Arrange
-            var dto = new BookingRegisterDTO(1, 1, DateTime.UtcNow.AddDays(3), DateTime.UtcNow.AddDays(1));
+            var dto = new BookingRegisterDTO(1, 1, DateOnly.FromDateTime(DateTime.UtcNow.AddDays(3)), DateOnly.FromDateTime(DateTime.UtcNow.AddDays(1)));
 
             // Act & Assert
             await Assert.ThrowsAsync<InvalidBookingDatesException>(
@@ -174,7 +174,7 @@ namespace HouseBookingRestApi.Tests.Services
         public async Task RegisterBookingAsync_WithNonExistentHouse_ThrowsEntityNotFoundException()
         {
             // Arrange
-            var dto = new BookingRegisterDTO(999, 1, DateTime.UtcNow.AddDays(1), DateTime.UtcNow.AddDays(3));
+            var dto = new BookingRegisterDTO(999, 1, DateOnly.FromDateTime(DateTime.UtcNow.AddDays(1)), DateOnly.FromDateTime(DateTime.UtcNow.AddDays(3)));
             unitOfWork.HouseRepository.GetHouseByIdAsync(999).Returns((House?)null);
 
             // Act & Assert
@@ -187,7 +187,7 @@ namespace HouseBookingRestApi.Tests.Services
         public async Task RegisterBookingAsync_WithNonExistentRenter_ThrowsEntityNotFoundException()
         {
             // Arrange
-            var dto = new BookingRegisterDTO(1, 999, DateTime.UtcNow.AddDays(1), DateTime.UtcNow.AddDays(3));
+            var dto = new BookingRegisterDTO(1, 999, DateOnly.FromDateTime(DateTime.UtcNow.AddDays(1)), DateOnly.FromDateTime(DateTime.UtcNow.AddDays(3)));
             var house = new House { Id = 1, Name = "Test House" };
 
             unitOfWork.HouseRepository.GetHouseByIdAsync(1).Returns(house);
@@ -203,15 +203,15 @@ namespace HouseBookingRestApi.Tests.Services
         public async Task RegisterBookingAsync_WithOverlappingDates_ThrowsBookingsOverlapException()
         {
             // Arrange
-            var dto = new BookingRegisterDTO(1, 1, DateTime.UtcNow.AddDays(1), DateTime.UtcNow.AddDays(3));
+            var dto = new BookingRegisterDTO(1, 1, DateOnly.FromDateTime(DateTime.UtcNow.AddDays(1)), DateOnly.FromDateTime(DateTime.UtcNow.AddDays(3)));
             var house = new House { Id = 1, Name = "Test House" };
             var renter = new Renter { Id = 1 };
             var existingBooking = new Booking 
             { 
                 Id = 1, 
                 HouseId = 1, 
-                StartDate = DateTime.UtcNow.AddDays(2), 
-                EndDate = DateTime.UtcNow.AddDays(4) 
+                StartDate = DateOnly.FromDateTime(DateTime.UtcNow.AddDays(2)), 
+                EndDate = DateOnly.FromDateTime(DateTime.UtcNow.AddDays(4)) 
             };
 
             unitOfWork.HouseRepository.GetHouseByIdAsync(1).Returns(house);

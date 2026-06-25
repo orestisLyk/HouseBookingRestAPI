@@ -42,8 +42,8 @@ namespace HouseBookingRestApi.Service
 
         public async Task RegisterBookingAsync(BookingRegisterDTO dto)
         {
-            
-            if (dto.StartDate <= DateTime.Now)
+
+            if (dto.StartDate <= DateOnly.FromDateTime(DateTime.Now))
             {
                 throw new InvalidBookingDatesException("Start date must be in the future.");
             }

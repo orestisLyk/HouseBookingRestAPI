@@ -2,8 +2,8 @@
 {
     public record BookingReadOnlyDTO(
         int Id,
-        DateTime StartDate,
-        DateTime EndDate,
+        DateOnly StartDate,
+        DateOnly EndDate,
         int HouseId,
         int RenterId,
         string HouseName  

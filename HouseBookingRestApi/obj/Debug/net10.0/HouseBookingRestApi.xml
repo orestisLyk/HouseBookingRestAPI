@@ -73,5 +73,17 @@
         <member name="M:HouseBookingRestApi.Migrations.ChangePricePerNightToDecimal.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
             <inheritdoc />
         </member>
+        <member name="T:HouseBookingRestApi.Migrations.ConvertBookingDatesToDateOnly">
+            <inheritdoc />
+        </member>
+        <member name="M:HouseBookingRestApi.Migrations.ConvertBookingDatesToDateOnly.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:HouseBookingRestApi.Migrations.ConvertBookingDatesToDateOnly.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:HouseBookingRestApi.Migrations.ConvertBookingDatesToDateOnly.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
+            <inheritdoc />
+        </member>
     </members>
 </doc>

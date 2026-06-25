@@ -53,8 +53,8 @@ namespace HouseBookingRestApi.Tests.Repositories
             var booking = new Booking
             {
                 Id = 1,
-                StartDate = DateTime.UtcNow.AddDays(1),
-                EndDate = DateTime.UtcNow.AddDays(3),
+                StartDate = DateOnly.FromDateTime(DateTime.UtcNow.AddDays(1)),
+                EndDate = DateOnly.FromDateTime(DateTime.UtcNow.AddDays(3)),
                 HouseId = 1,
                 House = house,
                 RenterId = 1,
@@ -139,8 +139,8 @@ namespace HouseBookingRestApi.Tests.Repositories
             context.Bookings.Add(new Booking
             {
                 Id = 1,
-                StartDate = DateTime.UtcNow.AddDays(1),
-                EndDate = DateTime.UtcNow.AddDays(3),
+                StartDate = DateOnly.FromDateTime(DateTime.UtcNow.AddDays(1)),
+                EndDate = DateOnly.FromDateTime(DateTime.UtcNow.AddDays(3)),
                 HouseId = 1,
                 House = house1,
                 RenterId = 1,
@@ -149,8 +149,8 @@ namespace HouseBookingRestApi.Tests.Repositories
             context.Bookings.Add(new Booking
             {
                 Id = 2,
-                StartDate = DateTime.UtcNow.AddDays(5),
-                EndDate = DateTime.UtcNow.AddDays(7),
+                StartDate = DateOnly.FromDateTime(DateTime.UtcNow.AddDays(5)),
+                EndDate = DateOnly.FromDateTime(DateTime.UtcNow.AddDays(7)),
                 HouseId = 1,
                 House = house1,
                 RenterId = 1,
@@ -159,8 +159,8 @@ namespace HouseBookingRestApi.Tests.Repositories
             context.Bookings.Add(new Booking
             {
                 Id = 3,
-                StartDate = DateTime.UtcNow.AddDays(10),
-                EndDate = DateTime.UtcNow.AddDays(12),
+                StartDate = DateOnly.FromDateTime(DateTime.UtcNow.AddDays(10)),
+                EndDate = DateOnly.FromDateTime(DateTime.UtcNow.AddDays(12)),
                 HouseId = 2,
                 House = house2,
                 RenterId = 1,
@@ -217,8 +217,8 @@ namespace HouseBookingRestApi.Tests.Repositories
             context.Bookings.Add(new Booking
             {
                 Id = 1,
-                StartDate = DateTime.UtcNow.AddDays(1),
-                EndDate = DateTime.UtcNow.AddDays(3),
+                StartDate = DateOnly.FromDateTime(DateTime.UtcNow.AddDays(1)),
+                EndDate = DateOnly.FromDateTime(DateTime.UtcNow.AddDays(3)),
                 HouseId = 1,
                 House = house,
                 RenterId = 1,
@@ -228,8 +228,8 @@ namespace HouseBookingRestApi.Tests.Repositories
             context.Bookings.Add(new Booking
             {
                 Id = 2,
-                StartDate = DateTime.UtcNow.AddDays(5),
-                EndDate = DateTime.UtcNow.AddDays(7),
+                StartDate = DateOnly.FromDateTime(DateTime.UtcNow.AddDays(5)),
+                EndDate = DateOnly.FromDateTime(DateTime.UtcNow.AddDays(7)),
                 HouseId = 1,
                 House = house,
                 RenterId = 1,
@@ -299,8 +299,8 @@ namespace HouseBookingRestApi.Tests.Repositories
             context.Bookings.Add(new Booking
             {
                 Id = 1,
-                StartDate = DateTime.UtcNow.AddDays(1),
-                EndDate = DateTime.UtcNow.AddDays(3),
+                StartDate = DateOnly.FromDateTime(DateTime.UtcNow.AddDays(1)),
+                EndDate = DateOnly.FromDateTime(DateTime.UtcNow.AddDays(3)),
                 HouseId = 1,
                 House = house,
                 RenterId = 1,
@@ -309,8 +309,8 @@ namespace HouseBookingRestApi.Tests.Repositories
             context.Bookings.Add(new Booking
             {
                 Id = 2,
-                StartDate = DateTime.UtcNow.AddDays(5),
-                EndDate = DateTime.UtcNow.AddDays(7),
+                StartDate = DateOnly.FromDateTime(DateTime.UtcNow.AddDays(5)),
+                EndDate = DateOnly.FromDateTime(DateTime.UtcNow.AddDays(7)),
                 HouseId = 1,
                 House = house,
                 RenterId = 1,
@@ -319,8 +319,8 @@ namespace HouseBookingRestApi.Tests.Repositories
             context.Bookings.Add(new Booking
             {
                 Id = 3,
-                StartDate = DateTime.UtcNow.AddDays(10),
-                EndDate = DateTime.UtcNow.AddDays(12),
+                StartDate = DateOnly.FromDateTime(DateTime.UtcNow.AddDays(10)),
+                EndDate = DateOnly.FromDateTime(DateTime.UtcNow.AddDays(12)),
                 HouseId = 1,
                 House = house,
                 RenterId = 2,
@@ -377,8 +377,8 @@ namespace HouseBookingRestApi.Tests.Repositories
             context.Bookings.Add(new Booking
             {
                 Id = 1,
-                StartDate = DateTime.UtcNow.AddDays(1),
-                EndDate = DateTime.UtcNow.AddDays(3),
+                StartDate = DateOnly.FromDateTime(DateTime.UtcNow.AddDays(1)),
+                EndDate = DateOnly.FromDateTime(DateTime.UtcNow.AddDays(3)),
                 HouseId = 1,
                 House = house,
                 RenterId = 1,
@@ -388,8 +388,8 @@ namespace HouseBookingRestApi.Tests.Repositories
             context.Bookings.Add(new Booking
             {
                 Id = 2,
-                StartDate = DateTime.UtcNow.AddDays(5),
-                EndDate = DateTime.UtcNow.AddDays(7),
+                StartDate = DateOnly.FromDateTime(DateTime.UtcNow.AddDays(5)),
+                EndDate = DateOnly.FromDateTime(DateTime.UtcNow.AddDays(7)),
                 HouseId = 1,
                 House = house,
                 RenterId = 1,
@@ -409,3 +409,4 @@ namespace HouseBookingRestApi.Tests.Repositories
         }
     }
 }
+

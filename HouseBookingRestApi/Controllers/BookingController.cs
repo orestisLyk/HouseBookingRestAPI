@@ -158,7 +158,7 @@ namespace HouseBookingRestApi.Controllers
                     {
                         throw new EntityForbiddenException("You are not authorized to cancel this booking.");
                     }
-                    if (booking.StartDate <= DateTime.Now)
+                    if (booking.StartDate <= DateOnly.FromDateTime(DateTime.Now))
                     {
                         throw new EntityForbiddenException("Cannot cancel booking after Check in Date");
                     }
@@ -171,7 +171,7 @@ namespace HouseBookingRestApi.Controllers
                     {
                         throw new EntityForbiddenException("You are not authorized to cancel this booking.");
                     }
-                    if (booking.StartDate <= DateTime.Now)
+                    if (booking.StartDate <= DateOnly.FromDateTime(DateTime.Now))
                     {
                         throw new EntityForbiddenException("Cannot cancel booking after Check in Date");
                     }
