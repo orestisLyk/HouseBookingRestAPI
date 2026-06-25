@@ -209,6 +209,36 @@ namespace HouseBookingRestApi.Service
             user.DeletedAt = DateTime.Now;
         }
 
+        public async Task CreateAdminAsync()
+        {
+            var adminUsername = configuration.GetValue<string>("Admin:Username");
+            var adminPassword = configuration.GetValue<string>("Admin:Password");
+
+            if (string.IsNullOrEmpty(adminUsername) || string.IsNullOrEmpty(adminPassword))
+            {
+                throw new InvalidOperationException("Admin credentials are not configured correctly.");
+            }
+
+            var existingAdmin = await unitOfWork.UserRepository.GetUserByUsernameAsync(adminUsername);
+            if (existingAdmin != null)
+            {
+                return; // Admin already exists
+            }
+
+            var adminUser = new User
+            {
+                Username = adminUsername,
+                Email = "admin@example.com",
+                Firstname = "Admin",
+                Lastname = "User",
+                Password = encryptionUtil.Encrypt(adminPassword),
+                RoleId = 1
+            };
+
+            await unitOfWork.UserRepository.AddAsync(adminUser);
+            await unitOfWork.SaveAsync();
+        }
+
 
     }
 }

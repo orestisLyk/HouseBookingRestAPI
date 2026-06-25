@@ -382,6 +382,7 @@ And adjust `docker-compose.yml` for production settings (remove debug ports, add
 |--------|----------|-------------|---------------|
 | POST | `/auth/register` | Register a new user | No |
 | POST | `/auth/login` | Login and receive JWT token | No |
+| POST | `/auth/admin` | Create admin user (first-time setup) | No |
 
 ### Users (`/api/v1/users`)
 
@@ -471,6 +472,82 @@ The API uses **JWT Bearer Token** authentication.
 - **Admin (1)**: Full system access
 - **Owner (2)**: Manage houses and view bookings
 - **Renter (3)**: Create bookings and view own bookings
+
+### Creating an Admin User
+
+Admin users cannot be created through the normal registration endpoint for security reasons. Instead, use the dedicated admin creation endpoint:
+
+#### Step 1: Configure Admin Credentials
+
+Add the following configuration to your environment:
+
+**For Docker deployment (`.env` file):**
+```env
+# Admin Configuration
+Admin__Username=admin
+Admin__Password=YourSecureAdminPassword123!
+Admin__Email=admin@yourdomain.com
+Admin__Firstname=System
+Admin__Lastname=Administrator
+```
+
+**For local development (`appsettings.json` or `appsettings.Development.json`):**
+```json
+{
+  "Admin": {
+    "Username": "admin",
+    "Password": "YourSecureAdminPassword123!",
+    "Email": "admin@yourdomain.com",
+    "Firstname": "System",
+    "Lastname": "Administrator"
+  }
+}
+```
+
+> **Note:** Only `Username` and `Password` are required. If `Email`, `Firstname`, or `Lastname` are not provided, defaults will be used.
+
+#### Step 2: Create the Admin User
+
+Call the admin creation endpoint:
+
+```bash
+POST /api/v1/auth/admin
+```
+
+**Using cURL:**
+```bash
+curl -X POST http://localhost:5000/api/v1/auth/admin
+```
+
+**Using Swagger:**
+1. Navigate to `http://localhost:5000/swagger`
+2. Expand the **Auth** section
+3. Click on `POST /api/v1/auth/admin`
+4. Click "Try it out"
+5. Click "Execute"
+
+**Response:**
+- **201 Created**: Admin user created successfully
+- **409 Conflict**: Admin user already exists (safe to ignore)
+- **500 Internal Server Error**: Check configuration or ensure roles are seeded in the database
+
+#### Step 3: Login as Admin
+
+Once created, login with the admin credentials:
+
+```bash
+POST /api/v1/auth/login
+{
+  "username": "admin",
+  "password": "YourSecureAdminPassword123!"
+}
+```
+
+> **Security Note:** 
+> - Change the default admin password immediately after first login
+> - Store admin credentials securely
+> - Never commit admin credentials to version control
+> - Use strong, unique passwords for production environments
 
 ## 🗄 Database Schema
 

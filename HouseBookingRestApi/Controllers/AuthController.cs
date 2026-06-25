@@ -52,7 +52,19 @@ namespace HouseBookingRestApi.Controllers
             return StatusCode(StatusCodes.Status201Created);
         }
 
-
+        /// <summary>
+        /// Creates an admin user in the system according to the configured admin credentials. This endpoint is intended for initial setup.
+        /// </summary>
+        /// <returns></returns>
+        [HttpPost("admin")]
+        [AllowAnonymous]
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status409Conflict)]
+        public async Task<ActionResult> CreateAdmin()
+        {
+            await userService.CreateAdminAsync();
+            return Created("", "Admin user created successfully.");
+        }
 
 
     }

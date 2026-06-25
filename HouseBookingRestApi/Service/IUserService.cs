@@ -18,5 +18,7 @@ namespace HouseBookingRestApi.Service
         Task<JwtTokenDTO> Login(UserLoginDTO dto);
 
         Task DeleteUserAsync(UserDeleteDTO dto);
+
+        Task CreateAdminAsync();
     }
 }
