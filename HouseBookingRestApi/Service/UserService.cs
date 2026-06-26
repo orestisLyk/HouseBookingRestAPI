@@ -151,11 +151,11 @@ namespace HouseBookingRestApi.Service
             int? ownerId = user.Owner?.Id;
             int? renterId = user.Renter?.Id;
 
-            string token = CreateUserToken(user.Id, user.Username, user.Email, user.Role, ownerId, renterId);
+            string token = await CreateUserToken(user.Id, user.Username, user.Email, user.Role, ownerId, renterId);
             return new JwtTokenDTO(token);
         }
 
-        public string CreateUserToken(int userId, string username, string email, Role userRole, int? ownerId = null, int? renterId = null)
+        public async Task<string> CreateUserToken(int userId, string username, string email, Role userRole, int? ownerId = null, int? renterId = null)
         {
             var appSecurityKey = configuration.GetValue<string>("Jwt:Key");
             if (appSecurityKey == null)
@@ -165,6 +165,8 @@ namespace HouseBookingRestApi.Service
             var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(appSecurityKey));
             var signingCredentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
 
+            var capabilities = await unitOfWork.CapabilityRepository.GetCapabilitiesByRoleIdAsync(userRole.Id);
+
             var ClaimsInfo = new List<Claim>
             {
                 new Claim(ClaimTypes.NameIdentifier, userId.ToString()),
@@ -172,6 +174,12 @@ namespace HouseBookingRestApi.Service
                 new Claim(ClaimTypes.Email, email),
                 new Claim(ClaimTypes.Role, userRole.Name)
             };
+
+            // Add capabilities as claims
+            foreach (var capability in capabilities)
+            {
+                ClaimsInfo.Add(new Claim("Capability", capability.Name));
+            }
 
             // Add OwnerId if user is an Owner
             if (ownerId.HasValue)
