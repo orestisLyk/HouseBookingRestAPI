@@ -40,6 +40,7 @@ namespace HouseBookingRestApi.Repositories
         {
             var totalUsers = await _context.Users.CountAsync();
             var users = await _context.Users
+                .Include(u => u.Role)
                 .OrderBy(u => u.Id)
                 .Skip((pageNumber - 1) * pageSize)
                 .Take(pageSize)

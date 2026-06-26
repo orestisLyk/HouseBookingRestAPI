@@ -8,7 +8,8 @@ namespace HouseBookingRestApi.Configuration
     {
         public MapperConfig()
         {
-            CreateMap<User, UserReadOnlyDTO>();
+            CreateMap<User, UserReadOnlyDTO>()
+                .ForMember(dest => dest.RoleName, opt => opt.MapFrom(src => src.Role.Name));
 
             CreateMap<UserRegisterDTO, User>();
 
