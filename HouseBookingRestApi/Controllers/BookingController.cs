@@ -20,6 +20,13 @@ namespace HouseBookingRestApi.Controllers
             this.houseService = houseService;
         }
 
+        /// <summary>
+        /// Gets a Booking by its ID.
+        /// </summary>
+        /// <param name="id">The ID of the booking.</param>
+        /// <returns>The booking details.</returns>
+        /// <exception cref="EntityNotFoundException"></exception>
+        /// <exception cref="EntityForbiddenException"></exception>
         [HttpGet("{id}")]
         [Authorize]
         [ProducesResponseType(typeof(BookingReadOnlyDTO), StatusCodes.Status200OK)]
@@ -33,6 +40,13 @@ namespace HouseBookingRestApi.Controllers
             {
                 throw new EntityNotFoundException("Booking not found");
             }
+
+            var currentUserCapabilities = User.FindAll("Capabilities").Select(c => c.Value).ToList();
+            if (!currentUserCapabilities.Any(c => c == "ViewBooking"))
+            {
+                throw new EntityForbiddenException("You are not authorized to access this booking");
+            }
+
             var currentUserRole = User.FindFirst(ClaimTypes.Role)?.Value;
             switch (currentUserRole)
             {
@@ -60,17 +74,26 @@ namespace HouseBookingRestApi.Controllers
             return Ok(booking);
         }
 
+        /// <summary>
+        /// Gets All Bookings made by a Renter.
+        /// </summary>
+        /// <param name="renterId">The ID of the renter.</param>
+        /// <returns>A list of bookings made by the specified renter.</returns>
+        /// <exception cref="EntityForbiddenException"></exception>
         [HttpGet("by-renter/{renterId}")]
         [Authorize]
         [ProducesResponseType(typeof(IEnumerable<BookingReadOnlyDTO>), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         public async Task<ActionResult<IEnumerable<BookingReadOnlyDTO>>> GetBookingsByRenterId(int renterId)
         {
-            var currentUserRole = User.FindFirst(ClaimTypes.Role)?.Value;
-            if(currentUserRole != "Admin" && currentUserRole != "Renter")
+            var currentUserCapabilities = User.FindAll("Capabilities").Select(c => c.Value).ToList();
+            if (!currentUserCapabilities.Any(c => c == "ViewBooking"))
             {
-                throw new EntityForbiddenException("You are not authorized to view bookings by renter.");
+                throw new EntityForbiddenException("You are not authorized to access this booking");
             }
+
+            var currentUserRole = User.FindFirst(ClaimTypes.Role)?.Value;
+            
             if(currentUserRole == "Renter")
             {
                 var currentRenterId = int.Parse(User.FindFirst("RenterId")?.Value);
@@ -85,6 +108,13 @@ namespace HouseBookingRestApi.Controllers
             return Ok(bookings);
         }
 
+        /// <summary>
+        /// Gets All Bookings made for a House.
+        /// </summary>
+        /// <param name="houseId">The ID of the house.</param>
+        /// <returns>A list of bookings made for the specified house.</returns>
+        /// <exception cref="EntityNotFoundException"></exception>
+        /// <exception cref="EntityForbiddenException"></exception>
         [HttpGet("by-house/{houseId}")]
         [Authorize]
         [ProducesResponseType(typeof(IEnumerable<BookingReadOnlyDTO>), StatusCodes.Status200OK)]
@@ -98,12 +128,14 @@ namespace HouseBookingRestApi.Controllers
                 throw new EntityNotFoundException("House not found");
             }
 
+            var currentUserCapabilities = User.FindAll("Capabilities").Select(c => c.Value).ToList();
+            if (!currentUserCapabilities.Any(c => c == "ViewBooking"))
+            {
+                throw new EntityForbiddenException("You are not authorized to view these Bookings");
+            }
+
             var ownerId = house.OwnerId;
             var currentUserRole = User.FindFirst(ClaimTypes.Role)?.Value;
-            if (currentUserRole != "Admin" && currentUserRole != "Owner")
-            {
-                throw new EntityForbiddenException("You are not authorized to view bookings.");
-            }
             var currentOwnerId = int.Parse(User.FindFirst("OwnerId")?.Value);
             if (currentUserRole == "Owner" && currentOwnerId != ownerId)
             {
@@ -113,6 +145,12 @@ namespace HouseBookingRestApi.Controllers
             return Ok(bookings);
         }
 
+        /// <summary>
+        /// Creates a new Booking.
+        /// </summary>
+        /// <param name="dto">The booking details.</param>
+        /// <returns></returns>
+        /// <exception cref="EntityForbiddenException"></exception>
         [HttpPost]
         [Authorize]
         [ProducesResponseType(StatusCodes.Status201Created)]
@@ -120,10 +158,12 @@ namespace HouseBookingRestApi.Controllers
         public async Task<ActionResult> CreateBooking([FromBody] BookingRegisterDTO dto)
         {
             var currentUserRole = User.FindFirst(ClaimTypes.Role)?.Value;
-            if (currentUserRole != "Renter")
+            var currentUserCapabilities = User.FindAll("Capabilities").Select(c => c.Value).ToList();
+            if (!currentUserCapabilities.Any(c => c == "CreateBooking"))
             {
-                throw new EntityForbiddenException("You are not authorized to create a booking.");
+                throw new EntityForbiddenException("You are not authorized to create a booking");
             }
+
             var currentRenterId = int.Parse(User.FindFirst("RenterId")?.Value);
             if (currentRenterId != dto.RenterId)
             {
@@ -133,6 +173,13 @@ namespace HouseBookingRestApi.Controllers
             return Created();
         }
 
+        /// <summary>
+        /// Deletes a Booking by ID.
+        /// </summary>
+        /// <param name="id">The ID of the booking to delete.</param>
+        /// <returns></returns>
+        /// <exception cref="EntityNotFoundException"></exception>
+        /// <exception cref="EntityForbiddenException"></exception>
         [HttpDelete("{id}")]
         [Authorize]
         [ProducesResponseType(StatusCodes.Status204NoContent)]

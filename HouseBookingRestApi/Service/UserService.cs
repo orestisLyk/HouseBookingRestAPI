@@ -178,7 +178,7 @@ namespace HouseBookingRestApi.Service
             // Add capabilities as claims
             foreach (var capability in capabilities)
             {
-                ClaimsInfo.Add(new Claim("Capability", capability.Name));
+                ClaimsInfo.Add(new Claim("Capabilities", capability.Name));
             }
 
             // Add OwnerId if user is an Owner

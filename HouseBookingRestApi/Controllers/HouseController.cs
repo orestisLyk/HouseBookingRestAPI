@@ -18,6 +18,11 @@ namespace HouseBookingRestApi.Controllers
             this.houseService = houseService;
         }
 
+        /// <summary>
+        /// Get a House by its ID.
+        /// </summary>
+        /// <param name="id">The ID of the house.</param>
+        /// <returns>The house details.</returns>
         [HttpGet("{id}")]
         [AllowAnonymous]
         [ProducesResponseType(typeof(HouseReadOnlyDTO), StatusCodes.Status200OK)]
@@ -28,6 +33,12 @@ namespace HouseBookingRestApi.Controllers
             return Ok(house);
         }
 
+        /// <summary>
+        /// Get all houses with pagination.
+        /// </summary>
+        /// <param name="page">The page number to retrieve.</param>
+        /// <param name="size">The number of houses per page.</param>
+        /// <returns>A paginated list of houses.</returns>
         [HttpGet]
         [AllowAnonymous]
         [ProducesResponseType(typeof(IEnumerable<HouseReadOnlyDTO>), StatusCodes.Status200OK)]
@@ -37,6 +48,12 @@ namespace HouseBookingRestApi.Controllers
             return Ok(houses);
         }
 
+        /// <summary>
+        /// Creates a new house.
+        /// </summary>
+        /// <param name="dto">The house registration details.</param>
+        /// <returns>The created house details.</returns>
+        /// <exception cref="EntityForbiddenException"></exception>
         [HttpPost]
         [Authorize]
         [ProducesResponseType(typeof(HouseReadOnlyDTO), StatusCodes.Status201Created)]
@@ -44,10 +61,10 @@ namespace HouseBookingRestApi.Controllers
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         public async Task<ActionResult<HouseReadOnlyDTO>> CreateHouse([FromBody] HouseRegisterDTO dto)
         {
-            var currentUserRole = User.FindFirst(ClaimTypes.Role)?.Value;
-            if (currentUserRole != "Owner")
+            var currentUserCapabilities = User.FindAll("Capabilities").Select(c => c.Value).ToList();
+            if (!currentUserCapabilities.Any(c => c == "CreateHouse"))
             {
-                throw new EntityForbiddenException("Only users with the 'Owner' role can create houses.");
+                throw new EntityForbiddenException("You are not authorized to create houses.");
             }
 
             var ownerIdClaim = User.FindFirst("OwnerId")?.Value;
@@ -62,6 +79,11 @@ namespace HouseBookingRestApi.Controllers
             return CreatedAtAction(nameof(GetHouseById), new { id = createdHouse.Id }, createdHouse);
         }
 
+        /// <summary>
+        /// Gets all Houses owned by the authenticated owner.
+        /// </summary>
+        /// <param name="ownerId">The ID of the owner.</param>
+        /// <returns>A list of houses owned by the specified owner.</returns>
         [HttpGet("by-owner/{ownerId}")]
         [AllowAnonymous]
         [ProducesResponseType(typeof(List<HouseReadOnlyDTO>), StatusCodes.Status200OK)]
@@ -71,6 +93,13 @@ namespace HouseBookingRestApi.Controllers
             return Ok(houses);
         }
 
+        /// <summary>
+        /// Deletes a house by its ID.
+        /// </summary>
+        /// <param name="id">The ID of the house to delete.</param>
+        /// <returns>No content if the deletion is successful.</returns>
+        /// <exception cref="EntityForbiddenException"></exception>
+        /// <exception cref="EntityNotFoundException"></exception>
         [HttpDelete("{id}")]
         [Authorize]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
@@ -78,6 +107,12 @@ namespace HouseBookingRestApi.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> DeleteHouse(int id)
         {
+            var currentUserCapabilities = User.FindAll("Capabilities").Select(c => c.Value).ToList();
+            if (!currentUserCapabilities.Any(c => c == "DeleteHouse"))
+            {
+                throw new EntityForbiddenException("You are not authorized to delete houses.");
+            }
+
             var currentUserRole = User.FindFirst(ClaimTypes.Role)?.Value;
             switch (currentUserRole)
             {

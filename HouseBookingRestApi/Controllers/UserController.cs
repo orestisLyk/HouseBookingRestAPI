@@ -36,13 +36,20 @@ namespace HouseBookingRestApi.Controllers
             return Ok(returnDto);
         }
 
+        /// <summary>
+        /// Gets all users in the system.
+        /// </summary>
+        /// <param name="page">The page number to retrieve.</param>
+        /// <param name="size">The number of users per page.</param>
+        /// <returns>A paginated list of users.</returns>
+        /// <exception cref="EntityForbiddenException"></exception>
         [HttpGet]
-        [Authorize(Policy = "AdminOnly")]
+        [Authorize]
         [ProducesResponseType(typeof(PaginatedResult<UserReadOnlyDTO>), StatusCodes.Status200OK)]
         public async Task<ActionResult<PaginatedResult<UserReadOnlyDTO>>> GetUsers([FromQuery] int page = 1, [FromQuery] int size = 10)
         {
-            var currentUserRole = User.FindFirst(ClaimTypes.Role)?.Value;
-            if(currentUserRole != "Admin")
+            var currentUserCapabilities = User.FindAll("Capabilities").Select(c => c.Value).ToList();
+            if (!currentUserCapabilities.Any(c => c == "ManageUsers"))
             {
                 throw new EntityForbiddenException("You are not authorized to view the list of users.");
             }
@@ -50,16 +57,23 @@ namespace HouseBookingRestApi.Controllers
             return Ok(paginatedUsers);
         }
 
+
+        /// <summary>
+        /// Deletes a user by their ID.
+        /// </summary>
+        /// <param name="id">The ID of the user to delete.</param>
+        /// <returns>No content if the deletion is successful.</returns>
+        /// <exception cref="EntityForbiddenException"></exception>
         [HttpDelete("{id}")]
-        [Authorize(Policy = "AdminOnly")]
+        [Authorize]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         public async Task<ActionResult> DeleteUser(int id)
         {
             var dto = new UserDeleteDTO(id);
-            var currentUserRole = User.FindFirst(ClaimTypes.Role)?.Value;
-            if (currentUserRole != "Admin")
+            var currentUserCapabilities = User.FindAll("Capabilities").Select(c => c.Value).ToList();
+            if (!currentUserCapabilities.Any(c => c == "ManageUsers"))
             {
                 throw new EntityForbiddenException("You are not authorized to delete users.");
             }
@@ -72,8 +86,8 @@ namespace HouseBookingRestApi.Controllers
         {
             var currentUsername = User.FindFirst(ClaimTypes.Name)?.Value;
             var isOwnProfile = string.Equals(currentUsername, username, StringComparison.OrdinalIgnoreCase);
-            var currentUserRole = User.FindFirst(ClaimTypes.Role)?.Value;
-            if (!isOwnProfile && !string.Equals(currentUserRole, "Admin", StringComparison.OrdinalIgnoreCase))
+            var currentUserCapabilities = User.FindAll("Capabilities").Select(c => c.Value).ToList();
+            if (!isOwnProfile && !currentUserCapabilities.Any(c => c == "ManageUsers"))
             {
                 throw new EntityForbiddenException("You are not authorized to view this user's profile.");
             }
