@@ -20,6 +20,8 @@ namespace HouseBookingRestApi.Repositories
 
         public IHouseImageRepository HouseImageRepository { get; }
 
+        public ICapabilityRepository CapabilityRepository { get; }
+
         public UnitOfWork(HouseBookingRestApiContext context)
         {
             _context = context;
@@ -30,6 +32,7 @@ namespace HouseBookingRestApi.Repositories
             HouseRepository = new HouseRepository(context);
             HouseImageRepository = new HouseImageRepository(context);
             BookingRepository = new BookingRepository(context);
+            CapabilityRepository = new CapabilityRepository(context);
         }
 
         public async Task<bool> SaveAsync()

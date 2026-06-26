@@ -16,6 +16,8 @@
 
         IRoleRepository RoleRepository { get; }
 
+        ICapabilityRepository CapabilityRepository { get; }
+
         Task<bool> SaveAsync();
     }
 }
